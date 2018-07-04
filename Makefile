@@ -38,8 +38,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-CPPFLAGS =					\
-	-std=c++11 -Wall -Wextra -Werror
+CXXFLAGS =		\
+	-std=c++11	\
+	-Wall		\
+	-Wextra		\
+	-Werror
 
 INC = -Isrc
 
@@ -83,13 +86,13 @@ $(OBJS_DIR)/test_%.o:			\
 	$(SRCS_DIR)/test_Common.hpp	\
 	$(SRCS_DIR)/Properties.hpp	\
 	$(SRCS_DIR)/Common.hpp
-	$(CXX) $(CPPFLAGS) $(EXTRAFLAGS) $(INC) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) $(INC) -c -o $@ $<
 
 $(OBJS_DIR)/%.o:			\
 	$(SRCS_DIR)/%.cpp		\
 	$(SRCS_DIR)/%.hpp		\
 	$(SRCS_DIR)/Common.hpp
-	$(CXX) $(CPPFLAGS) $(EXTRAFLAGS) $(INC) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) $(INC) -c -o $@ $<
 
 $(BINS_DIR)/test_PktPubMsg:		\
 	$(OBJS_DIR)/test_PktPubMsg.o	\
@@ -99,7 +102,7 @@ $(BINS_DIR)/test_PktPubMsg:		\
 	$(OBJS_DIR)/Properties.o	\
 	$(OBJS_DIR)/AppBuf.o		\
 	$(OBJS_DIR)/Packet.o
-	$(CXX) $(CPPFLAGS) $(EXTRAFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) -o $@ $^
 
 $(BINS_DIR)/test_PktRCodeProp:		\
 	$(OBJS_DIR)/test_PktRCodeProp.o	\
@@ -109,7 +112,7 @@ $(BINS_DIR)/test_PktRCodeProp:		\
 	$(OBJS_DIR)/Properties.o	\
 	$(OBJS_DIR)/AppBuf.o		\
 	$(OBJS_DIR)/Packet.o
-	$(CXX) $(CPPFLAGS) $(EXTRAFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) -o $@ $^
 
 $(BINS_DIR)/test_%:			\
 	$(OBJS_DIR)/test_%.o		\
@@ -117,7 +120,7 @@ $(BINS_DIR)/test_%:			\
 	$(OBJS_DIR)/Properties.o	\
 	$(OBJS_DIR)/AppBuf.o		\
 	$(OBJS_DIR)/Packet.o
-	$(CXX) $(CPPFLAGS) $(EXTRAFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) -o $@ $^
 
 tests: $(TESTS)
 	@$(foreach test, $(TESTS), ./$(test) || exit 1;)
