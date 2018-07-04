@@ -44,7 +44,10 @@ CXXFLAGS =		\
 	-Wextra		\
 	-Werror
 
-INC = -Isrc
+INC =			\
+	-Isrc		\
+	-Iinclude	\
+	-Itests
 
 EXTRAFLAGS = -O0 -g
 
@@ -55,6 +58,10 @@ SRCS_DIR = src
 OBJS_DIR = obj
 
 BINS_DIR = bin
+
+INCS_DIR = include
+
+TESTS_DIR = tests
 
 TESTS =					\
 	$(BINS_DIR)/test_AppBuf		\
@@ -78,20 +85,20 @@ dirs:
 	@mkdir -p bin
 
 $(OBJS_DIR)/test_%.o:			\
-	$(SRCS_DIR)/test_%.cpp		\
+	$(TESTS_DIR)/test_%.cpp		\
 	$(SRCS_DIR)/%.cpp		\
-	$(SRCS_DIR)/%.hpp		\
-	$(SRCS_DIR)/AppBuf.hpp		\
-	$(SRCS_DIR)/Packet.hpp		\
-	$(SRCS_DIR)/test_Common.hpp	\
-	$(SRCS_DIR)/Properties.hpp	\
-	$(SRCS_DIR)/Common.hpp
+	$(INCS_DIR)/%.hpp		\
+	$(INCS_DIR)/AppBuf.hpp		\
+	$(INCS_DIR)/Packet.hpp		\
+	$(TESTS_DIR)/test_Common.hpp	\
+	$(INCS_DIR)/Properties.hpp	\
+	$(INCS_DIR)/Common.hpp
 	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) $(INC) -c -o $@ $<
 
 $(OBJS_DIR)/%.o:			\
 	$(SRCS_DIR)/%.cpp		\
-	$(SRCS_DIR)/%.hpp		\
-	$(SRCS_DIR)/Common.hpp
+	$(INCS_DIR)/%.hpp		\
+	$(INCS_DIR)/Common.hpp
 	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) $(INC) -c -o $@ $<
 
 $(BINS_DIR)/test_PktPubMsg:		\
