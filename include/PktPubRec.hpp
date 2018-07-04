@@ -41,21 +41,26 @@
 #ifndef __PKT_PUBREC_HPP__
 #define __PKT_PUBREC_HPP__
 
+#include "Common.hpp"
 #include "PktPubMsg.hpp"
 #include "Properties.hpp"
-#include "Common.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktPubRec: public PktPubMsg
+class PktPubRec : public PktPubMsg
 {
 public:
-	PktPubRec() : PktPubMsg(PktType::PUBREC, 0x00) {}
-	PktPubRec(AppBuf &buf) : PktPubMsg(PktType::PUBREC, 0x00, buf) {}
-	~PktPubRec() {}
+    PktPubRec() : PktPubMsg(PktType::PUBREC, 0x00)
+    {
+    }
+    PktPubRec(AppBuf &buf) : PktPubMsg(PktType::PUBREC, 0x00, buf)
+    {
+    }
+    ~PktPubRec()
+    {
+    }
 };
-
 }
 
 #endif
-

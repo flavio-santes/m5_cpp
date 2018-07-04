@@ -45,124 +45,124 @@
 
 int test(void)
 {
-	const char str[] = "Hello, World!";
-	m5::AppBuf *buf;
+    const char str[] = "Hello, World!";
+    m5::AppBuf *buf;
 
-	buf = new m5::AppBuf(64);
+    buf = new m5::AppBuf(64);
 
-	for (std::size_t i = 0; i < buf->size(); i++) {
-		if (buf->bytesToWrite() != (buf->size() - i)) {
-			error_exit("bytesToWrite");
-		}
+    for (std::size_t i = 0; i < buf->size(); i++) {
+        if (buf->bytesToWrite() != (buf->size() - i)) {
+            error_exit("bytesToWrite");
+        }
 
-		buf->writeNum8((uint8_t)i);
-	}
+        buf->writeNum8((uint8_t)i);
+    }
 
-	for (std::size_t i = 0; i < buf->size(); i++) {
-		buf->readNum8();
-	}
+    for (std::size_t i = 0; i < buf->size(); i++) {
+        buf->readNum8();
+    }
 
-	if (buf->bytesToRead() != 0) {
-		error_exit("bytesToRead");
-	}
+    if (buf->bytesToRead() != 0) {
+        error_exit("bytesToRead");
+    }
 
-	if (buf->bytesToWrite() != 0) {
-		error_exit("bytesToWrite");
-	}
+    if (buf->bytesToWrite() != 0) {
+        error_exit("bytesToWrite");
+    }
 
-	buf->rewind();
-	if (buf->bytesToRead() != buf->length()) {
-		error_exit("rewind");
-	}
+    buf->rewind();
+    if (buf->bytesToRead() != buf->length()) {
+        error_exit("rewind");
+    }
 
-	/* Buffer data is 0x00 0x01 0x02 0x03 0x04 0x05 ... */
-	if (buf->readNum16() != 0x0001) {
-		error_exit("readNum16");
-	}
+    /* Buffer data is 0x00 0x01 0x02 0x03 0x04 0x05 ... */
+    if (buf->readNum16() != 0x0001) {
+        error_exit("readNum16");
+    }
 
-	if (buf->bytesToRead() != (buf->length() - sizeof(uint16_t))) {
-		error_exit("readNum16");
-	}
+    if (buf->bytesToRead() != (buf->length() - sizeof(uint16_t))) {
+        error_exit("readNum16");
+    }
 
-	if (buf->readNum32() != 0x02030405) {
-		error_exit("readNum32");
-	}
+    if (buf->readNum32() != 0x02030405) {
+        error_exit("readNum32");
+    }
 
-	if (buf->bytesToRead() != (buf->length() - (sizeof(uint32_t) + sizeof(uint16_t)))) {
-		error_exit("readNum32");
-	}
+    if (buf->bytesToRead() !=
+        (buf->length() - (sizeof(uint32_t) + sizeof(uint16_t)))) {
+        error_exit("readNum32");
+    }
 
-	buf->reset();
-	if (buf->length() != 0 || buf->bytesToWrite() != buf->size()) {
-		error_exit("reset");
-	}
+    buf->reset();
+    if (buf->length() != 0 || buf->bytesToWrite() != buf->size()) {
+        error_exit("reset");
+    }
 
-	buf->writeNum16(0x0A0B);
-	/* Now buf is 0x0A 0x0B */
-	if (buf->readNum16() != 0x0A0B) {
-		error_exit("writeNum16");
-	}
+    buf->writeNum16(0x0A0B);
+    /* Now buf is 0x0A 0x0B */
+    if (buf->readNum16() != 0x0A0B) {
+        error_exit("writeNum16");
+    }
 
-	buf->writeNum32(0x0C0D0E0F);
-	/* Now buf is 0x0A 0x0B 0x0C 0x0D 0x0E 0x0F */
-	if (buf->readNum32() != 0x0C0D0E0F) {
-		error_exit("writeNum32");
-	}
+    buf->writeNum32(0x0C0D0E0F);
+    /* Now buf is 0x0A 0x0B 0x0C 0x0D 0x0E 0x0F */
+    if (buf->readNum32() != 0x0C0D0E0F) {
+        error_exit("writeNum32");
+    }
 
-	buf->writeString(str);
+    buf->writeString(str);
 
-	m5::ByteArray v;
-	auto rc = buf->readBinary(v);
-	if (rc != m5::StatusCode::SUCCESS || v.size() != strlen(str)) {
-		error_exit("readBinary len");
-	}
-	if (memcmp(v.data(), str, strlen(str)) != 0) {
-		error_exit("readBinary data");
-	}
+    m5::ByteArray v;
+    auto rc = buf->readBinary(v);
+    if (rc != m5::StatusCode::SUCCESS || v.size() != strlen(str)) {
+        error_exit("readBinary len");
+    }
+    if (memcmp(v.data(), str, strlen(str)) != 0) {
+        error_exit("readBinary data");
+    }
 
-	delete buf;
+    delete buf;
 
-	buf = new m5::AppBuf((uint8_t *)str, strlen(str));
+    buf = new m5::AppBuf((uint8_t *)str, strlen(str));
 
-	if (buf->size() != strlen(str) || buf->length() != buf->size()) {
-		error_exit("size or length");
-	}
-	if (memcmp(buf->data(), str, buf->length()) != 0) {
-		error_exit("rawData");
-	}
-	if (buf->bytesToRead() != buf->length() || buf->bytesToWrite() != 0) {
-		error_exit("bytesToRead or bytesToWrite");
-	}
+    if (buf->size() != strlen(str) || buf->length() != buf->size()) {
+        error_exit("size or length");
+    }
+    if (memcmp(buf->data(), str, buf->length()) != 0) {
+        error_exit("rawData");
+    }
+    if (buf->bytesToRead() != buf->length() || buf->bytesToWrite() != 0) {
+        error_exit("bytesToRead or bytesToWrite");
+    }
 
-	delete buf;
+    delete buf;
 
-	buf = new m5::AppBuf(16);
-	for (std::size_t i = 0; i < buf->size(); i++) {
-		buf->writeNum8(i);
-	}
+    buf = new m5::AppBuf(16);
+    for (std::size_t i = 0; i < buf->size(); i++) {
+        buf->writeNum8(i);
+    }
 
-	buf->readSkip(5);
-	if (buf->data()[5] != buf->readNum8()) {
-		error_exit("readSkip forward");
-	}
+    buf->readSkip(5);
+    if (buf->data()[5] != buf->readNum8()) {
+        error_exit("readSkip forward");
+    }
 
-	buf->readSkip(6, false);
-	if (buf->data()[0] != buf->readNum8()) {
-		error_exit("readSkip");
-	}
+    buf->readSkip(6, false);
+    if (buf->data()[0] != buf->readNum8()) {
+        error_exit("readSkip");
+    }
 
-	delete buf;
+    delete buf;
 
-	return 0;
+    return 0;
 }
 
 int main(void)
 {
-	int rc;
+    int rc;
 
-	rc = test();
-	test_rc(rc, "AppBuf");
+    rc = test();
+    test_rc(rc, "AppBuf");
 
-	return rc;
+    return rc;
 }
-

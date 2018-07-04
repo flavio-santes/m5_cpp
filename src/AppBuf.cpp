@@ -40,20 +40,21 @@
 
 #include "AppBuf.hpp"
 
-#include <endian.h>
 #include <cstring>
+#include <endian.h>
 
-namespace m5 {
+namespace m5
+{
 
 AppBuf::AppBuf(const uint8_t *data, std::size_t size) : _data(data, data + size)
 {
-	this->_size = size;
-	this->_length = size;
+    this->_size   = size;
+    this->_length = size;
 }
 
 AppBuf::AppBuf(std::size_t size) : _data(size)
 {
-	this->_size = size;
+    this->_size = size;
 }
 
 AppBuf::~AppBuf()
@@ -62,223 +63,229 @@ AppBuf::~AppBuf()
 
 void AppBuf::rewind(void)
 {
-	this->_offset = 0;
+    this->_offset = 0;
 }
 
 void AppBuf::reset(void)
 {
-	this->_offset = 0;
-	this->_length = 0;
+    this->_offset = 0;
+    this->_length = 0;
 }
 
 std::size_t AppBuf::bytesToRead(void) const
 {
-	return this->_length - this->_offset;
+    return this->_length - this->_offset;
 }
 
 void AppBuf::read(ByteArray &dst, std::size_t size)
 {
-	dst.insert(dst.end(), this->ptrRead(), this->ptrRead() + size);
-	this->_offset += size;
+    dst.insert(dst.end(), this->ptrRead(), this->ptrRead() + size);
+    this->_offset += size;
 }
 
 void AppBuf::read(uint8_t *d, std::size_t size)
 {
-	memcpy(d, ptrRead(), size);
-	this->_offset += size;
+    memcpy(d, ptrRead(), size);
+    this->_offset += size;
 }
 
 template <typename T> T AppBuf::readNum(void)
 {
-	uint8_t *d;
-	T v = 0;
+    uint8_t *d;
+    T v = 0;
 
-	d = reinterpret_cast<uint8_t *>(&v);
-	read(d, sizeof(T));
+    d = reinterpret_cast<uint8_t *>(&v);
+    read(d, sizeof(T));
 
-	switch (sizeof(T)) {
-	case 1: return v;
-	case 2: return be16toh(v);
-	case 4: return be32toh(v);
-	case 8: return be64toh(v);
-	}
+    switch (sizeof(T)) {
+    case 1:
+        return v;
+    case 2:
+        return be16toh(v);
+    case 4:
+        return be32toh(v);
+    case 8:
+        return be64toh(v);
+    }
 
-	return v;
+    return v;
 }
 
 uint8_t AppBuf::readNum8(void)
 {
-	return readNum<uint8_t>();
+    return readNum<uint8_t>();
 }
 
 uint16_t AppBuf::readNum16(void)
 {
-	return readNum<uint16_t>();
+    return readNum<uint16_t>();
 }
 
 uint32_t AppBuf::readNum32(void)
 {
-	return readNum<uint32_t>();
+    return readNum<uint32_t>();
 }
 
 enum StatusCode AppBuf::readBinary(ByteArray &dst)
 {
-	/* two bytes for the length, length could be 0... */
-	if (bytesToRead() < 2) {
-		return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
-	}
+    /* two bytes for the length, length could be 0... */
+    if (bytesToRead() < 2) {
+        return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
+    }
 
-	auto len = this->readNum16();
-	if (len == 0) {
-		dst.clear();
+    auto len = this->readNum16();
+    if (len == 0) {
+        dst.clear();
 
-		return StatusCode::SUCCESS;
-	}
+        return StatusCode::SUCCESS;
+    }
 
-	if (len > bytesToRead()) {
-		return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
-	}
+    if (len > bytesToRead()) {
+        return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
+    }
 
-	dst.assign(ptrRead(), ptrRead() + len);
-	this->_offset += len;
+    dst.assign(ptrRead(), ptrRead() + len);
+    this->_offset += len;
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 ByteArray *AppBuf::readBinary(void)
 {
-	ByteArray *data = new ByteArray();
+    ByteArray *data = new ByteArray();
 
-	enum StatusCode rc = readBinary(*data);
-	(void)rc;
+    enum StatusCode rc = readBinary(*data);
+    (void)rc;
 
-	return data;
+    return data;
 }
 
 enum StatusCode AppBuf::readKeyValue(ByteArray &key, ByteArray &value)
 {
-	enum StatusCode rc;
+    enum StatusCode rc;
 
-	rc = readBinary(key);
-	if (rc != StatusCode::SUCCESS) {
-		return rc;
-	}
+    rc = readBinary(key);
+    if (rc != StatusCode::SUCCESS) {
+        return rc;
+    }
 
-	rc = readBinary(value);
-	if (rc != StatusCode::SUCCESS) {
-		return rc;
-	}
+    rc = readBinary(value);
+    if (rc != StatusCode::SUCCESS) {
+        return rc;
+    }
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 enum StatusCode AppBuf::readVBI(uint32_t &v, uint8_t &wireSize)
 {
-	uint32_t multiplier = 1;
-	uint8_t encoded;
+    uint32_t multiplier = 1;
+    uint8_t encoded;
 
-	v = 0;
-	wireSize = 0;
-	do {
-		if (bytesToRead() < 1) {
-			return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
-		}
+    v        = 0;
+    wireSize = 0;
+    do {
+        if (bytesToRead() < 1) {
+            return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
+        }
 
-		if (multiplier > 128 * 128 * 128) {
-			return StatusCode::INVALID_VBI;
-		}
+        if (multiplier > 128 * 128 * 128) {
+            return StatusCode::INVALID_VBI;
+        }
 
-		encoded = readNum8();
-		wireSize += 1;
+        encoded = readNum8();
+        wireSize += 1;
 
-		v += (encoded & 127) * multiplier;
-		multiplier *= 128;
-	} while ((encoded & 128) != 0);
+        v += (encoded & 127) * multiplier;
+        multiplier *= 128;
+    } while ((encoded & 128) != 0);
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 void AppBuf::readSkip(std::size_t n, bool forward)
 {
-	this->_offset += (forward ? 1 : -1) * n;
+    this->_offset += (forward ? 1 : -1) * n;
 }
 
 void AppBuf::write(const uint8_t *d, std::size_t size)
 {
-	memcpy(ptrWrite(), d, size);
-	this->_length += size;
+    memcpy(ptrWrite(), d, size);
+    this->_length += size;
 }
 
 template <typename T> T host2net(T v)
 {
-	switch (sizeof(v)) {
-	case 1: return v;
-	case 2: return htobe16(v);
-	case 4: return htobe32(v);
-	case 8: return htobe64(v);
-	}
+    switch (sizeof(v)) {
+    case 1:
+        return v;
+    case 2:
+        return htobe16(v);
+    case 4:
+        return htobe32(v);
+    case 8:
+        return htobe64(v);
+    }
 
-	return 0;
+    return 0;
 }
 
 std::size_t AppBuf::bytesToWrite(void) const
 {
-	return this->_size - this->_length;
+    return this->_size - this->_length;
 }
 
 template <typename T> void AppBuf::writeNum(const T &v)
 {
-	uint8_t *data;
-	T vv;
+    uint8_t *data;
+    T vv;
 
-	vv = host2net<T>(v);
-	data = reinterpret_cast<uint8_t *>(&vv);
+    vv   = host2net<T>(v);
+    data = reinterpret_cast<uint8_t *>(&vv);
 
-	this->write(data, sizeof(v));
+    this->write(data, sizeof(v));
 }
 
 void AppBuf::writeNum8(uint32_t v)
 {
-	this->writeNum<uint8_t>(v);
+    this->writeNum<uint8_t>(v);
 }
 
 void AppBuf::writeNum16(uint32_t v)
 {
-	this->writeNum<uint16_t>(v);
+    this->writeNum<uint16_t>(v);
 }
 
 void AppBuf::writeNum32(uint32_t v)
 {
-	this->writeNum<uint32_t>(v);
+    this->writeNum<uint32_t>(v);
 }
 
 void AppBuf::writeBinary(const uint8_t *data, uint16_t size)
 {
-	this->writeNum16(size);
-	this->write(data, size);
+    this->writeNum16(size);
+    this->write(data, size);
 }
 
 void AppBuf::writeBinary(const ByteArray &src)
 {
-	this->writeBinary(src.data(), src.size());
+    this->writeBinary(src.data(), src.size());
 }
 
 void AppBuf::writeString(const char *str)
 {
-	this->writeBinary((uint8_t *)str, strlen(str));
+    this->writeBinary((uint8_t *)str, strlen(str));
 }
 
 void AppBuf::writeVBI(uint32_t v)
 {
-	do {
-		uint8_t encoded = v % 128;
-		v = v / 128;
-		if (v > 0) {
-			encoded = encoded | 128;
-		}
-		writeNum8(encoded);
-	} while (v > 0);
+    do {
+        uint8_t encoded = v % 128;
+        v               = v / 128;
+        if (v > 0) {
+            encoded = encoded | 128;
+        }
+        writeNum8(encoded);
+    } while (v > 0);
 }
-
 }
-

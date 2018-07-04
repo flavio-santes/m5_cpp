@@ -41,26 +41,32 @@
 #ifndef __PKT_PKTAUTH_HPP__
 #define __PKT_PKTAUTH_HPP__
 
-#include "PktRCodeProp.hpp"
 #include "Common.hpp"
+#include "PktRCodeProp.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktAuth : public PktRCodeProp {
+class PktAuth : public PktRCodeProp
+{
 public:
-	PktAuth() : PktRCodeProp(PktType::AUTH) {}
-	PktAuth(AppBuf &buf) : PktRCodeProp(PktType::AUTH, buf) {}
-	~PktAuth() {}
+    PktAuth() : PktRCodeProp(PktType::AUTH)
+    {
+    }
+    PktAuth(AppBuf &buf) : PktRCodeProp(PktType::AUTH, buf)
+    {
+    }
+    ~PktAuth()
+    {
+    }
 
-	enum StatusCode authenticationMethod(const uint8_t *data, uint16_t size);
-	enum StatusCode authenticationMethod(const char *str);
-	const ByteArray &authenticationMethod(void) const;
+    enum StatusCode authenticationMethod(const uint8_t *data, uint16_t size);
+    enum StatusCode authenticationMethod(const char *str);
+    const ByteArray &authenticationMethod(void) const;
 
-	enum StatusCode authenticationData(const uint8_t *data, uint16_t size);
-	const ByteArray &authenticationData(void) const;
+    enum StatusCode authenticationData(const uint8_t *data, uint16_t size);
+    const ByteArray &authenticationData(void) const;
 };
-
 }
 
 #endif
-

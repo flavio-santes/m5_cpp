@@ -40,103 +40,103 @@
 
 #include "PktPubMsg.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-PktPubMsg::PktPubMsg(enum PktType type, uint8_t reserved) :
-	Packet(type, reserved)
+PktPubMsg::PktPubMsg(enum PktType type, uint8_t reserved)
+    : Packet(type, reserved)
 {
 }
 
-PktPubMsg::PktPubMsg(enum PktType type, uint8_t reserved, AppBuf &buf) :
-	Packet(type, reserved)
+PktPubMsg::PktPubMsg(enum PktType type, uint8_t reserved, AppBuf &buf)
+    : Packet(type, reserved)
 {
-	this->readFrom(buf);
+    this->readFrom(buf);
 }
 
 void PktPubMsg::reasonCode(enum ReasonCode rc)
 {
-	this->_reasonCode = (uint8_t)rc;
+    this->_reasonCode = (uint8_t)rc;
 }
 
 enum StatusCode PktPubMsg::reasonString(const uint8_t *data, uint16_t size)
 {
-	return properties.reasonString(data, size);
+    return properties.reasonString(data, size);
 }
 
 enum StatusCode PktPubMsg::reasonString(const char *str)
 {
-	return properties.reasonString(str);
+    return properties.reasonString(str);
 }
 
 const ByteArray &PktPubMsg::reasonString(void) const
 {
-	return properties.reasonString();
+    return properties.reasonString();
 }
 
 enum StatusCode PktPubMsg::userProperty(const uint8_t *key, uint16_t keySize,
-					const uint8_t *value, uint16_t valueSize)
+                                        const uint8_t *value,
+                                        uint16_t valueSize)
 {
-	return properties.userProperty(key, keySize, value, valueSize);
+    return properties.userProperty(key, keySize, value, valueSize);
 }
 
 enum StatusCode PktPubMsg::userProperty(const char *key, const char *val)
 {
-	return properties.userProperty(key, val);
+    return properties.userProperty(key, val);
 }
 
 const UserProperty &PktPubMsg::userProperty(void) const
 {
-	return properties.userProperty();
+    return properties.userProperty();
 }
 
 enum StatusCode PktPubMsg::writeVariableHeader(AppBuf &buf)
 {
-	buf.writeNum16(this->packetId());
-	buf.writeNum8((uint8_t)this->reasonCode());
+    buf.writeNum16(this->packetId());
+    buf.writeNum8((uint8_t) this->reasonCode());
 
-	return properties.write(buf);
+    return properties.write(buf);
 }
 
 enum StatusCode PktPubMsg::writePayload(AppBuf &buf)
 {
-	(void)buf;
+    (void)buf;
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktPubMsg::writeTo(AppBuf &buf)
 {
-	Packet::variableHeaderSize = 2 + 1;
-	Packet::hasProperties = true;
+    Packet::variableHeaderSize = 2 + 1;
+    Packet::hasProperties      = true;
 
-	return Packet::writeTo(buf);
+    return Packet::writeTo(buf);
 }
 
 enum StatusCode PktPubMsg::readVariableHeader(AppBuf &buf)
 {
-	auto rc = this->packetId(buf.readNum16());
-	if (rc != StatusCode::SUCCESS) {
-		return rc;
-	}
+    auto rc = this->packetId(buf.readNum16());
+    if (rc != StatusCode::SUCCESS) {
+        return rc;
+    }
 
-	this->reasonCode((enum ReasonCode)buf.readNum8());
+    this->reasonCode((enum ReasonCode)buf.readNum8());
 
-	return properties.read(buf);
+    return properties.read(buf);
 }
 
 enum StatusCode PktPubMsg::readPayload(AppBuf &buf)
 {
-	(void)buf;
+    (void)buf;
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktPubMsg::readFrom(AppBuf &buf)
 {
-	Packet::minRemLen = packetIdSize + reasonCodeSize + propertyMinSize;
+    Packet::minRemLen = packetIdSize + reasonCodeSize + propertyMinSize;
 
-	return Packet::readFrom(buf);
+    return Packet::readFrom(buf);
 }
-
 }
-

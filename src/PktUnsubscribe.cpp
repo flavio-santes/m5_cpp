@@ -42,7 +42,8 @@
 
 #include <cstring>
 
-namespace m5 {
+namespace m5
+{
 
 PktUnsubscribe::PktUnsubscribe() : Packet(PktType::UNSUBSCRIBE, 0x02)
 {
@@ -50,92 +51,90 @@ PktUnsubscribe::PktUnsubscribe() : Packet(PktType::UNSUBSCRIBE, 0x02)
 
 PktUnsubscribe::PktUnsubscribe(AppBuf &buf) : Packet(PktType::UNSUBSCRIBE, 0x02)
 {
-	this->readFrom(buf);
+    this->readFrom(buf);
 }
 
 PktUnsubscribe::~PktUnsubscribe()
 {
-	auto it = _topics.begin();
-	while (it != _topics.end()) {
-		delete *it;
-		it++;
-	}
+    auto it = _topics.begin();
+    while (it != _topics.end()) {
+        delete *it;
+        it++;
+    }
 }
 
 void PktUnsubscribe::append(const char *str)
 {
-	ByteArray *item;
+    ByteArray *item;
 
-	item = new ByteArray(str, str + strlen(str));
-	this->_topics.push_back(item);
+    item = new ByteArray(str, str + strlen(str));
+    this->_topics.push_back(item);
 
-	payloadSize += stringLenSize + item->size();
+    payloadSize += stringLenSize + item->size();
 }
 
 enum StatusCode PktUnsubscribe::writeVariableHeader(AppBuf &buf)
 {
-	buf.writeNum16(this->packetId());
+    buf.writeNum16(this->packetId());
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 enum StatusCode PktUnsubscribe::writePayload(AppBuf &buf)
 {
-	for (auto it = _topics.begin(); it != _topics.end(); it++) {
-		ByteArray *item = *it;
-		buf.writeBinary(*item);
-	}
+    for (auto it = _topics.begin(); it != _topics.end(); it++) {
+        ByteArray *item = *it;
+        buf.writeBinary(*item);
+    }
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktUnsubscribe::writeTo(AppBuf &buf)
 {
-	Packet::variableHeaderSize = 2;
-	Packet::hasProperties = false;
+    Packet::variableHeaderSize = 2;
+    Packet::hasProperties      = false;
 
-	return Packet::writeTo(buf);
+    return Packet::writeTo(buf);
 }
 
 enum StatusCode PktUnsubscribe::fixedHeaderFlags(uint8_t flags)
 {
-	if ((flags & 0x02) != 0x02) {
-		return StatusCode::INVALID_FIXED_HEADER;
-	}
+    if ((flags & 0x02) != 0x02) {
+        return StatusCode::INVALID_FIXED_HEADER;
+    }
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 enum StatusCode PktUnsubscribe::readVariableHeader(AppBuf &buf)
 {
-	return this->packetId(buf.readNum16());
+    return this->packetId(buf.readNum16());
 }
 
 enum StatusCode PktUnsubscribe::readPayload(AppBuf &buf)
 {
-	uint32_t minRemLen = 2;
+    uint32_t minRemLen = 2;
 
-	while (minRemLen < remainingLength) {
-		ByteArray *topic;
+    while (minRemLen < remainingLength) {
+        ByteArray *topic;
 
-		topic =  buf.readBinary();
-		if (topic->size() == 0) {
-			return StatusCode::INVALID_TOPIC_NAME;
-		}
+        topic = buf.readBinary();
+        if (topic->size() == 0) {
+            return StatusCode::INVALID_TOPIC_NAME;
+        }
 
-		this->_topics.push_back(topic);
-		minRemLen += 2 + topic->size();
-	}
+        this->_topics.push_back(topic);
+        minRemLen += 2 + topic->size();
+    }
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktUnsubscribe::readFrom(AppBuf &buf)
 {
-	Packet::minRemLen = packetIdSize + stringLenSize + topicNameMinSize;
+    Packet::minRemLen = packetIdSize + stringLenSize + topicNameMinSize;
 
-	return Packet::readFrom(buf);
+    return Packet::readFrom(buf);
 }
-
 }
-

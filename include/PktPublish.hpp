@@ -41,88 +41,117 @@
 #ifndef __PKT_PUBLISH_HPP__
 #define __PKT_PUBLISH_HPP__
 
-#include "Properties.hpp"
-#include "Packet.hpp"
 #include "Common.hpp"
+#include "Packet.hpp"
+#include "Properties.hpp"
 
-namespace m5 {
+namespace m5
+{
 
 class PktPublish : public Packet
 {
 private:
-	bool _retain = false;
-	bool _dup = false;
+    bool _retain = false;
+    bool _dup    = false;
 
-	ByteArray _payload;
-	ByteArray _topic;
+    ByteArray _payload;
+    ByteArray _topic;
 
-	void headerFlags(uint8_t firstByte);
-	uint8_t headerFlags(void);
+    void headerFlags(uint8_t firstByte);
+    uint8_t headerFlags(void);
 
-	enum StatusCode writeVariableHeader(AppBuf &buf) override;
-	enum StatusCode writePayload(AppBuf &buf) override;
+    enum StatusCode writeVariableHeader(AppBuf &buf) override;
+    enum StatusCode writePayload(AppBuf &buf) override;
 
-	enum StatusCode fixedHeaderFlags(uint8_t flags) override;
-	enum StatusCode readVariableHeader(AppBuf &buf) override;
-	enum StatusCode readPayload(AppBuf &buf) override;
+    enum StatusCode fixedHeaderFlags(uint8_t flags) override;
+    enum StatusCode readVariableHeader(AppBuf &buf) override;
+    enum StatusCode readPayload(AppBuf &buf) override;
 
 public:
-	PktPublish();
-	PktPublish(AppBuf &buf);
-	~PktPublish();
+    PktPublish();
+    PktPublish(AppBuf &buf);
+    ~PktPublish();
 
-	enum PktQoS QoS(void) const { return Packet::QoS(); }
-	enum StatusCode QoS(enum PktQoS q) { return Packet::QoS(q); }
+    enum PktQoS QoS(void) const
+    {
+        return Packet::QoS();
+    }
+    enum StatusCode QoS(enum PktQoS q)
+    {
+        return Packet::QoS(q);
+    }
 
-	bool retain(void) const { return this->_retain; }
-	void retain (bool f) { this->_retain = f; }
+    bool retain(void) const
+    {
+        return this->_retain;
+    }
+    void retain(bool f)
+    {
+        this->_retain = f;
+    }
 
-	bool dup(void) const { return this->_dup; }
-	void dup(bool f) { this->_dup = f; }
+    bool dup(void) const
+    {
+        return this->_dup;
+    }
+    void dup(bool f)
+    {
+        this->_dup = f;
+    }
 
-	enum StatusCode packetId(uint16_t id) { return Packet::packetId(id); }
-	uint16_t packetId(void) const { return Packet::packetId(); }
+    enum StatusCode packetId(uint16_t id)
+    {
+        return Packet::packetId(id);
+    }
+    uint16_t packetId(void) const
+    {
+        return Packet::packetId();
+    }
 
-	enum StatusCode topic(const uint8_t *data, uint16_t size);
-	enum StatusCode topic(const char *str);
-	const ByteArray &topic(void) const { return _topic; }
+    enum StatusCode topic(const uint8_t *data, uint16_t size);
+    enum StatusCode topic(const char *str);
+    const ByteArray &topic(void) const
+    {
+        return _topic;
+    }
 
-	enum StatusCode payload(const uint8_t *data, uint16_t size);
-	const ByteArray &payload(void) const { return _payload; }
+    enum StatusCode payload(const uint8_t *data, uint16_t size);
+    const ByteArray &payload(void) const
+    {
+        return _payload;
+    }
 
-	enum StatusCode payloadFormatIndicator(bool v);
-	bool payloadFormatIndicator(void) const;
+    enum StatusCode payloadFormatIndicator(bool v);
+    bool payloadFormatIndicator(void) const;
 
-	enum StatusCode publicationExpiryInterval(uint32_t v);
-	uint32_t publicationExpiryInterval(void) const;
+    enum StatusCode publicationExpiryInterval(uint32_t v);
+    uint32_t publicationExpiryInterval(void) const;
 
-	enum StatusCode contentType(const uint8_t *data, uint16_t size);
-	enum StatusCode contentType(const char *str);
-	const ByteArray &contentType(void) const;
+    enum StatusCode contentType(const uint8_t *data, uint16_t size);
+    enum StatusCode contentType(const char *str);
+    const ByteArray &contentType(void) const;
 
-	enum StatusCode responseTopic(const uint8_t *data, uint16_t size);
-	enum StatusCode responseTopic(const char *str);
-	const ByteArray &responseTopic(void) const;
+    enum StatusCode responseTopic(const uint8_t *data, uint16_t size);
+    enum StatusCode responseTopic(const char *str);
+    const ByteArray &responseTopic(void) const;
 
-	enum StatusCode subscriptionIdentifier(uint32_t v);
-	uint32_t subscriptionIdentifier(void) const;
+    enum StatusCode subscriptionIdentifier(uint32_t v);
+    uint32_t subscriptionIdentifier(void) const;
 
-	enum StatusCode correlationData(const uint8_t *data, uint16_t size);
-	const ByteArray &correlationData(void) const;
+    enum StatusCode correlationData(const uint8_t *data, uint16_t size);
+    const ByteArray &correlationData(void) const;
 
-	enum StatusCode topicAlias(uint16_t v);
-	uint16_t topicAlias(void) const;
+    enum StatusCode topicAlias(uint16_t v);
+    uint16_t topicAlias(void) const;
 
-	enum StatusCode userProperty(const uint8_t *key, uint16_t keySize,
-				     const uint8_t *value, uint16_t valueSize);
-	enum StatusCode userProperty(const char *key, const char *val);
-	const UserProperty &userProperty(void) const;
+    enum StatusCode userProperty(const uint8_t *key, uint16_t keySize,
+                                 const uint8_t *value, uint16_t valueSize);
+    enum StatusCode userProperty(const char *key, const char *val);
+    const UserProperty &userProperty(void) const;
 
-	uint32_t writeTo(AppBuf &buf) override;
-	uint32_t readFrom(AppBuf &buf) override;
+    uint32_t writeTo(AppBuf &buf) override;
+    uint32_t readFrom(AppBuf &buf) override;
 };
-
 }
 
 #endif
-

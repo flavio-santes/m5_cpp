@@ -41,21 +41,26 @@
 #ifndef __PKT_PUBCOMP_HPP__
 #define __PKT_PUBCOMP_HPP__
 
-#include "Properties.hpp"
-#include "PktPubMsg.hpp"
 #include "Common.hpp"
+#include "PktPubMsg.hpp"
+#include "Properties.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktPubComp: public PktPubMsg
+class PktPubComp : public PktPubMsg
 {
 public:
-	PktPubComp() : PktPubMsg(PktType::PUBCOMP, 0x00) {}
-	PktPubComp(AppBuf &buf) : PktPubMsg(PktType::PUBCOMP, 0x00, buf) {}
-	~PktPubComp() {}
+    PktPubComp() : PktPubMsg(PktType::PUBCOMP, 0x00)
+    {
+    }
+    PktPubComp(AppBuf &buf) : PktPubMsg(PktType::PUBCOMP, 0x00, buf)
+    {
+    }
+    ~PktPubComp()
+    {
+    }
 };
-
 }
 
 #endif
-

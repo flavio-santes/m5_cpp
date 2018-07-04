@@ -41,21 +41,26 @@
 #ifndef __PKT_PUBREL_HPP__
 #define __PKT_PUBREL_HPP__
 
-#include "Properties.hpp"
-#include "PktPubMsg.hpp"
 #include "Common.hpp"
+#include "PktPubMsg.hpp"
+#include "Properties.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktPubRel: public PktPubMsg
+class PktPubRel : public PktPubMsg
 {
 public:
-	PktPubRel() : PktPubMsg(PktType::PUBREL, 0x02) {}
-	PktPubRel(AppBuf &buf) : PktPubMsg(PktType::PUBREL, 0x02, buf) {}
-	~PktPubRel() {}
+    PktPubRel() : PktPubMsg(PktType::PUBREL, 0x02)
+    {
+    }
+    PktPubRel(AppBuf &buf) : PktPubMsg(PktType::PUBREL, 0x02, buf)
+    {
+    }
+    ~PktPubRel()
+    {
+    }
 };
-
 }
 
 #endif
-

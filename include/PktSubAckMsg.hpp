@@ -41,52 +41,65 @@
 #ifndef __PKT_SUBACKMSG_HPP__
 #define __PKT_SUBACKMSG_HPP__
 
-#include "Properties.hpp"
-#include "Packet.hpp"
 #include "Common.hpp"
+#include "Packet.hpp"
+#include "Properties.hpp"
 
 #include <list>
 
-namespace m5 {
+namespace m5
+{
 
 class PktSubAckMsg : public Packet
 {
 private:
-	std::list<uint8_t> _reasonCodes;
+    std::list<uint8_t> _reasonCodes;
 
-	enum StatusCode writeVariableHeader(AppBuf &buf) override;
-	enum StatusCode writePayload(AppBuf &buf) override;
+    enum StatusCode writeVariableHeader(AppBuf &buf) override;
+    enum StatusCode writePayload(AppBuf &buf) override;
 
-	enum StatusCode readVariableHeader(AppBuf &buf) override;
-	enum StatusCode readPayload(AppBuf &buf) override;
+    enum StatusCode readVariableHeader(AppBuf &buf) override;
+    enum StatusCode readPayload(AppBuf &buf) override;
 
 protected:
-	PktSubAckMsg(enum PktType type);
-	PktSubAckMsg(enum PktType type, AppBuf &buf);
+    PktSubAckMsg(enum PktType type);
+    PktSubAckMsg(enum PktType type, AppBuf &buf);
 
 public:
-	virtual ~PktSubAckMsg() {}
+    virtual ~PktSubAckMsg()
+    {
+    }
 
-	enum StatusCode packetId(uint16_t id) { return Packet::packetId(id); }
-	uint16_t packetId(void) { return Packet::packetId(); }
+    enum StatusCode packetId(uint16_t id)
+    {
+        return Packet::packetId(id);
+    }
+    uint16_t packetId(void)
+    {
+        return Packet::packetId();
+    }
 
-	void append(enum ReasonCode rc) { this->_reasonCodes.push_back((uint8_t)rc); }
-	const std::list<uint8_t> &reasonCodes() const { return _reasonCodes; }
+    void append(enum ReasonCode rc)
+    {
+        this->_reasonCodes.push_back((uint8_t)rc);
+    }
+    const std::list<uint8_t> &reasonCodes() const
+    {
+        return _reasonCodes;
+    }
 
-	enum StatusCode reasonString(const uint8_t *data, uint16_t size);
-	enum StatusCode reasonString(const char *str);
-	const ByteArray &reasonString(void) const;
+    enum StatusCode reasonString(const uint8_t *data, uint16_t size);
+    enum StatusCode reasonString(const char *str);
+    const ByteArray &reasonString(void) const;
 
-	enum StatusCode userProperty(const uint8_t *key, uint16_t keySize,
-				     const uint8_t *value, uint16_t valueSize);
-	enum StatusCode userProperty(const char *key, const char *val);
-	const UserProperty &userProperty(void) const;
+    enum StatusCode userProperty(const uint8_t *key, uint16_t keySize,
+                                 const uint8_t *value, uint16_t valueSize);
+    enum StatusCode userProperty(const char *key, const char *val);
+    const UserProperty &userProperty(void) const;
 
-	uint32_t writeTo(AppBuf &buf) override;
-	uint32_t readFrom(AppBuf &buf) override;
+    uint32_t writeTo(AppBuf &buf) override;
+    uint32_t readFrom(AppBuf &buf) override;
 };
-
 }
 
 #endif
-

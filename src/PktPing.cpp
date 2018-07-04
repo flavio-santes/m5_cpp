@@ -40,7 +40,8 @@
 
 #include "PktPing.hpp"
 
-namespace m5 {
+namespace m5
+{
 
 PktPing::PktPing(enum PktType type) : Packet(type, 0x00)
 {
@@ -48,51 +49,49 @@ PktPing::PktPing(enum PktType type) : Packet(type, 0x00)
 
 PktPing::PktPing(enum PktType type, AppBuf &buf) : Packet(type, 0x00)
 {
-	this->readFrom(buf);
+    this->readFrom(buf);
 }
 
 enum StatusCode PktPing::writeVariableHeader(AppBuf &buf)
 {
-	(void)buf;
+    (void)buf;
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 enum StatusCode PktPing::writePayload(AppBuf &buf)
 {
-	(void)buf;
+    (void)buf;
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktPing::writeTo(AppBuf &buf)
 {
-	Packet::variableHeaderSize = 0;
-	Packet::hasProperties = false;
+    Packet::variableHeaderSize = 0;
+    Packet::hasProperties      = false;
 
-	return Packet::writeTo(buf);
+    return Packet::writeTo(buf);
 }
 
 enum StatusCode PktPing::readVariableHeader(AppBuf &buf)
 {
-	(void)buf;
+    (void)buf;
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 enum StatusCode PktPing::readPayload(AppBuf &buf)
 {
-	(void)buf;
+    (void)buf;
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktPing::readFrom(AppBuf &buf)
 {
-	Packet::minRemLen = 0;
+    Packet::minRemLen = 0;
 
-	return Packet::readFrom(buf);
+    return Packet::readFrom(buf);
 }
-
 }
-

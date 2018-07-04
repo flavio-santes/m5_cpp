@@ -41,71 +41,71 @@
 #include "PktUnsubscribe.hpp"
 #include "test_Common.hpp"
 
-bool cmp(const std::list<m5::ByteArray *> &a, const std::list<m5::ByteArray *> &b)
+bool cmp(const std::list<m5::ByteArray *> &a,
+         const std::list<m5::ByteArray *> &b)
 {
-	if (a.size() != b.size()) {
-		return false;
-	}
+    if (a.size() != b.size()) {
+        return false;
+    }
 
-	auto a_it = a.begin();
-	auto b_it = b.begin();
+    auto a_it = a.begin();
+    auto b_it = b.begin();
 
-	do {
-		const m5::ByteArray *aArray = *a_it;
-		const m5::ByteArray *bArray = *b_it;
+    do {
+        const m5::ByteArray *aArray = *a_it;
+        const m5::ByteArray *bArray = *b_it;
 
-		if (*aArray != *bArray) {
-			return false;
-		}
+        if (*aArray != *bArray) {
+            return false;
+        }
 
-		a_it++;
-		b_it++;
-	} while (a_it != a.end() && b_it != b.end());
+        a_it++;
+        b_it++;
+    } while (a_it != a.end() && b_it != b.end());
 
-	return true;
+    return true;
 }
 
 int test(void)
 {
-	m5::PktUnsubscribe *unsubs;
-	const char msg[] = "Hello, World!";
-	m5::AppBuf buf(256);
+    m5::PktUnsubscribe *unsubs;
+    const char msg[] = "Hello, World!";
+    m5::AppBuf buf(256);
 
-	unsubs = new m5::PktUnsubscribe();
-	unsubs->packetId(0xABCD);
-	unsubs->append(msg);
-	unsubs->append(msg);
-	unsubs->append(msg);
+    unsubs = new m5::PktUnsubscribe();
+    unsubs->packetId(0xABCD);
+    unsubs->append(msg);
+    unsubs->append(msg);
+    unsubs->append(msg);
 
-	unsubs->writeTo(buf);
-	if (unsubs->status() != m5::StatusCode::SUCCESS) {
-		error_exit("writeTo");
-	}
+    unsubs->writeTo(buf);
+    if (unsubs->status() != m5::StatusCode::SUCCESS) {
+        error_exit("writeTo");
+    }
 
-	m5::PktUnsubscribe unsubsRead(buf);
-	if (unsubsRead.status() != m5::StatusCode::SUCCESS) {
-		error_exit("readFrom");
-	}
+    m5::PktUnsubscribe unsubsRead(buf);
+    if (unsubsRead.status() != m5::StatusCode::SUCCESS) {
+        error_exit("readFrom");
+    }
 
-	if (unsubs->packetId() != unsubsRead.packetId()) {
-		error_exit("read/write: Packet Id");
-	}
-	if (cmp(unsubs->topics(), unsubsRead.topics()) != true) {
-		error_exit("read/write: Topics");
-	}
+    if (unsubs->packetId() != unsubsRead.packetId()) {
+        error_exit("read/write: Packet Id");
+    }
+    if (cmp(unsubs->topics(), unsubsRead.topics()) != true) {
+        error_exit("read/write: Topics");
+    }
 
-	delete unsubs;
+    delete unsubs;
 
-	return 0;
+    return 0;
 }
 
 int main(void)
 {
-	int rc;
+    int rc;
 
-	rc = test();
-	test_rc(rc, "PktUnsubscribe");
+    rc = test();
+    test_rc(rc, "PktUnsubscribe");
 
-	return 0;
+    return 0;
 }
-

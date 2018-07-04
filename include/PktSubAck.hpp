@@ -41,18 +41,24 @@
 #ifndef __PKT_SUBACK_HPP__
 #define __PKT_SUBACK_HPP__
 
-#include"PktSubAckMsg.hpp"
+#include "PktSubAckMsg.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktSubAck : public PktSubAckMsg {
+class PktSubAck : public PktSubAckMsg
+{
 public:
-	PktSubAck() : PktSubAckMsg(PktType::SUBACK) {}
-	PktSubAck(AppBuf &buf) : PktSubAckMsg(PktType::SUBACK, buf) {}
-	~PktSubAck() {}
+    PktSubAck() : PktSubAckMsg(PktType::SUBACK)
+    {
+    }
+    PktSubAck(AppBuf &buf) : PktSubAckMsg(PktType::SUBACK, buf)
+    {
+    }
+    ~PktSubAck()
+    {
+    }
 };
-
 }
 
 #endif
-

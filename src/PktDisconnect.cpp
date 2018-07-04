@@ -40,32 +40,32 @@
 
 #include "PktDisconnect.hpp"
 
-namespace m5 {
+namespace m5
+{
 
 enum StatusCode PktDisconnect::sessionExpiryInterval(uint32_t v)
 {
-	return properties.sessionExpiryInterval(v);
+    return properties.sessionExpiryInterval(v);
 }
 
 uint32_t PktDisconnect::sessionExpiryInterval(void) const
 {
-	return properties.sessionExpiryInterval();
+    return properties.sessionExpiryInterval();
 }
 
-enum StatusCode PktDisconnect::serverReference(const uint8_t *data, uint16_t size)
+enum StatusCode PktDisconnect::serverReference(const uint8_t *data,
+                                               uint16_t size)
 {
-	return properties.serverReference(data, size);
+    return properties.serverReference(data, size);
 }
 
 enum StatusCode PktDisconnect::serverReference(const char *str)
 {
-	return properties.serverReference(str);
+    return properties.serverReference(str);
 }
 
 const ByteArray &PktDisconnect::serverReference(void) const
 {
-	return properties.serverReference();
+    return properties.serverReference();
 }
-
 }
-

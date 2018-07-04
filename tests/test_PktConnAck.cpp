@@ -38,177 +38,177 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test_Common.hpp"
 #include "PktConnAck.hpp"
+#include "test_Common.hpp"
 
 #include <cstring>
 
 int test(void)
 {
-	const char msg[] = "Hello, World!";
-	m5::ByteArray msgArray(msg, msg + strlen(msg));
-	uint32_t u32 = 0xABCDEF01;
-	uint16_t u16 = 0xABCD;
-	m5::PktConnAck *connAck;
-	m5::AppBuf buf(256);
-	m5::StatusCode rc;
+    const char msg[] = "Hello, World!";
+    m5::ByteArray msgArray(msg, msg + strlen(msg));
+    uint32_t u32 = 0xABCDEF01;
+    uint16_t u16 = 0xABCD;
+    m5::PktConnAck *connAck;
+    m5::AppBuf buf(256);
+    m5::StatusCode rc;
 
-	connAck = new m5::PktConnAck(false, m5::ReasonCode::SUCCESS);
+    connAck = new m5::PktConnAck(false, m5::ReasonCode::SUCCESS);
 
-	rc = connAck->receiveMaximum(u16);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("receiveMaximum");
-	}
+    rc = connAck->receiveMaximum(u16);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("receiveMaximum");
+    }
 
-	rc = connAck->maximumQoS(m5::PktQoS::QoS2);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("maximumQoS");
-	}
+    rc = connAck->maximumQoS(m5::PktQoS::QoS2);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("maximumQoS");
+    }
 
-	rc = connAck->retainAvailable(true);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("retainAvailable");
-	}
+    rc = connAck->retainAvailable(true);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("retainAvailable");
+    }
 
-	rc = connAck->maximumPacketSize(u32);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("maximumPacketSize");
-	}
+    rc = connAck->maximumPacketSize(u32);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("maximumPacketSize");
+    }
 
-	rc = connAck->assignedClientIdentifier(msg);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("assignedClientIdentifier");
-	}
+    rc = connAck->assignedClientIdentifier(msg);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("assignedClientIdentifier");
+    }
 
-	rc = connAck->topicAliasMaximum(u16);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("topicAliasMaximum");
-	}
+    rc = connAck->topicAliasMaximum(u16);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("topicAliasMaximum");
+    }
 
-	rc = connAck->reasonString(msg);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("reasonString");
-	}
+    rc = connAck->reasonString(msg);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("reasonString");
+    }
 
-	rc = connAck->userProperty(msg, msg);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("userProperty");
-	}
+    rc = connAck->userProperty(msg, msg);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("userProperty");
+    }
 
-	rc = connAck->wildcardSubscriptionAvailable(true);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("wildcardSubscriptionAvailable");
-	}
+    rc = connAck->wildcardSubscriptionAvailable(true);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("wildcardSubscriptionAvailable");
+    }
 
-	rc = connAck->sharedSubscriptionAvailable(true);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("sharedSubscriptionAvailable");
-	}
+    rc = connAck->sharedSubscriptionAvailable(true);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("sharedSubscriptionAvailable");
+    }
 
-	rc = connAck->serverKeepAlive(u16);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("serverKeepAlive");
-	}
+    rc = connAck->serverKeepAlive(u16);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("serverKeepAlive");
+    }
 
-	rc = connAck->responseInformation(msg);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("responseInformation");
-	}
+    rc = connAck->responseInformation(msg);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("responseInformation");
+    }
 
-	rc = connAck->serverReference(msg);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("serverReference");
-	}
+    rc = connAck->serverReference(msg);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("serverReference");
+    }
 
-	rc = connAck->authenticationMethod(msg);
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("authenticationMethod");
-	}
+    rc = connAck->authenticationMethod(msg);
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("authenticationMethod");
+    }
 
-	rc = connAck->authenticationData((const uint8_t *)msg, strlen(msg));
-	if (rc != m5::StatusCode::SUCCESS) {
-		error_exit("authenticationData");
-	}
+    rc = connAck->authenticationData((const uint8_t *)msg, strlen(msg));
+    if (rc != m5::StatusCode::SUCCESS) {
+        error_exit("authenticationData");
+    }
 
-	connAck->writeTo(buf);
-	if (connAck->status() != m5::StatusCode::SUCCESS) {
-		error_exit("writeTo");
-	}
+    connAck->writeTo(buf);
+    if (connAck->status() != m5::StatusCode::SUCCESS) {
+        error_exit("writeTo");
+    }
 
-	m5::PktConnAck connAckRead;
+    m5::PktConnAck connAckRead;
 
-	connAckRead.readFrom(buf);
-	if (connAckRead.status() != m5::StatusCode::SUCCESS) {
-		error_exit("readFrom");
-	}
+    connAckRead.readFrom(buf);
+    if (connAckRead.status() != m5::StatusCode::SUCCESS) {
+        error_exit("readFrom");
+    }
 
-	if (connAckRead.receiveMaximum() != u16) {
-		error_exit("receiveMaximum read/write");
-	}
+    if (connAckRead.receiveMaximum() != u16) {
+        error_exit("receiveMaximum read/write");
+    }
 
-	if (connAckRead.maximumQoS() != m5::PktQoS::QoS2) {
-		error_exit("maximumQoS read/write");
-	}
+    if (connAckRead.maximumQoS() != m5::PktQoS::QoS2) {
+        error_exit("maximumQoS read/write");
+    }
 
-	if (connAckRead.retainAvailable() != true) {
-		error_exit("retainAvailable read/write");
-	}
+    if (connAckRead.retainAvailable() != true) {
+        error_exit("retainAvailable read/write");
+    }
 
-	if (connAckRead.maximumPacketSize() != u32) {
-		error_exit("maximumPacketSize read/write");
-	}
+    if (connAckRead.maximumPacketSize() != u32) {
+        error_exit("maximumPacketSize read/write");
+    }
 
-	if (connAckRead.assignedClientIdentifier() != msgArray) {
-		error_exit("assignedClientIdentifier read/write");
-	}
+    if (connAckRead.assignedClientIdentifier() != msgArray) {
+        error_exit("assignedClientIdentifier read/write");
+    }
 
-	if (connAckRead.topicAliasMaximum() != u16) {
-		error_exit("topicAliasMaximum read/write");
-	}
+    if (connAckRead.topicAliasMaximum() != u16) {
+        error_exit("topicAliasMaximum read/write");
+    }
 
-	if (connAckRead.reasonString() != msgArray) {
-		error_exit("reasonString read/write");
-	}
+    if (connAckRead.reasonString() != msgArray) {
+        error_exit("reasonString read/write");
+    }
 
-	if (connAckRead.wildcardSubscriptionAvailable() != true) {
-		error_exit("wildcardSubscriptionAvailable read/write");
-	}
+    if (connAckRead.wildcardSubscriptionAvailable() != true) {
+        error_exit("wildcardSubscriptionAvailable read/write");
+    }
 
-	if (connAckRead.sharedSubscriptionAvailable() != true) {
-		error_exit("sharedSubscriptionAvailable read/write");
-	}
+    if (connAckRead.sharedSubscriptionAvailable() != true) {
+        error_exit("sharedSubscriptionAvailable read/write");
+    }
 
-	if (connAckRead.serverKeepAlive() != u16) {
-		error_exit("serverKeepAlive read/write");
-	}
+    if (connAckRead.serverKeepAlive() != u16) {
+        error_exit("serverKeepAlive read/write");
+    }
 
-	if (connAckRead.responseInformation() != msgArray) {
-		error_exit("responseInformation read/write");
-	}
+    if (connAckRead.responseInformation() != msgArray) {
+        error_exit("responseInformation read/write");
+    }
 
-	if (connAckRead.serverReference() != msgArray) {
-		error_exit("serverReference read/write");
-	}
+    if (connAckRead.serverReference() != msgArray) {
+        error_exit("serverReference read/write");
+    }
 
-	if (connAckRead.authenticationMethod() != msgArray) {
-		error_exit("authenticationMethod read/write");
-	}
+    if (connAckRead.authenticationMethod() != msgArray) {
+        error_exit("authenticationMethod read/write");
+    }
 
-	if (connAckRead.authenticationData() != msgArray) {
-		error_exit("authenticationData read/write");
-	}
+    if (connAckRead.authenticationData() != msgArray) {
+        error_exit("authenticationData read/write");
+    }
 
-	delete connAck;
+    delete connAck;
 
-	return 0;
+    return 0;
 }
 
 int main(void)
 {
-	int rc;
+    int rc;
 
-	rc = test();
-	test_rc(rc, "PktConnAck");
+    rc = test();
+    test_rc(rc, "PktConnAck");
 
-	return 0;
+    return 0;
 }

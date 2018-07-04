@@ -41,42 +41,50 @@
 #ifndef __PKT_UNSUBSCRIBE_HPP__
 #define __PKT_UNSUBSCRIBE_HPP__
 
-#include "Properties.hpp"
-#include "Packet.hpp"
 #include "Common.hpp"
+#include "Packet.hpp"
+#include "Properties.hpp"
 
 #include <list>
 
-namespace m5 {
+namespace m5
+{
 
 class PktUnsubscribe : public Packet
 {
 private:
-	std::list<ByteArray *> _topics;
+    std::list<ByteArray *> _topics;
 
-	virtual enum StatusCode writeVariableHeader(AppBuf &buf) override;
-	virtual enum StatusCode writePayload(AppBuf &buf) override;
+    virtual enum StatusCode writeVariableHeader(AppBuf &buf) override;
+    virtual enum StatusCode writePayload(AppBuf &buf) override;
 
-	enum StatusCode fixedHeaderFlags(uint8_t flags) override;
-	enum StatusCode readVariableHeader(AppBuf &buf) override;
-	enum StatusCode readPayload(AppBuf &buf) override;
+    enum StatusCode fixedHeaderFlags(uint8_t flags) override;
+    enum StatusCode readVariableHeader(AppBuf &buf) override;
+    enum StatusCode readPayload(AppBuf &buf) override;
 
 public:
-	PktUnsubscribe();
-	PktUnsubscribe(AppBuf &buf);
-	~PktUnsubscribe();
+    PktUnsubscribe();
+    PktUnsubscribe(AppBuf &buf);
+    ~PktUnsubscribe();
 
-	enum StatusCode packetId(uint16_t id) { return Packet::packetId(id); }
-	uint16_t packetId(void) { return Packet::packetId(); }
+    enum StatusCode packetId(uint16_t id)
+    {
+        return Packet::packetId(id);
+    }
+    uint16_t packetId(void)
+    {
+        return Packet::packetId();
+    }
 
-	void append(const char *str);
-	const std::list<ByteArray *> &topics() const { return _topics; }
+    void append(const char *str);
+    const std::list<ByteArray *> &topics() const
+    {
+        return _topics;
+    }
 
-	uint32_t writeTo(AppBuf &buf) override;
-	uint32_t readFrom(AppBuf &buf) override;
+    uint32_t writeTo(AppBuf &buf) override;
+    uint32_t readFrom(AppBuf &buf) override;
 };
-
 }
 
 #endif
-

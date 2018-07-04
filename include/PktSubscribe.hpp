@@ -41,54 +41,63 @@
 #ifndef __PKT_SUBSCRIBE_HPP__
 #define __PKT_SUBSCRIBE_HPP__
 
-#include "Properties.hpp"
 #include "Packet.hpp"
+#include "Properties.hpp"
 
 #include <list>
 
-namespace m5 {
+namespace m5
+{
 
 class TopicOptions
 {
 public:
-	ByteArray topic;
-	uint8_t options;
+    ByteArray topic;
+    uint8_t options;
 
-	TopicOptions(const uint8_t *topic, uint16_t size, uint8_t options);
-	TopicOptions(const char *topic, uint8_t options);
+    TopicOptions(const uint8_t *topic, uint16_t size, uint8_t options);
+    TopicOptions(const char *topic, uint8_t options);
 };
 
-class PktSubscribe : public Packet {
+class PktSubscribe : public Packet
+{
 private:
-	std::list<TopicOptions *> _topics;
+    std::list<TopicOptions *> _topics;
 
-	enum StatusCode writeVariableHeader(AppBuf &buf) override;
-	enum StatusCode writePayload(AppBuf &buf) override;
+    enum StatusCode writeVariableHeader(AppBuf &buf) override;
+    enum StatusCode writePayload(AppBuf &buf) override;
 
-	enum StatusCode readVariableHeader(AppBuf &buf) override;
-	enum StatusCode readPayload(AppBuf &buf) override;
+    enum StatusCode readVariableHeader(AppBuf &buf) override;
+    enum StatusCode readPayload(AppBuf &buf) override;
 
 public:
-	PktSubscribe();
-	PktSubscribe(AppBuf &buf);
-	~PktSubscribe();
+    PktSubscribe();
+    PktSubscribe(AppBuf &buf);
+    ~PktSubscribe();
 
-	void append(const uint8_t *topic, uint16_t size, uint8_t options);
-	void append(const char *topic, uint8_t options);
+    void append(const uint8_t *topic, uint16_t size, uint8_t options);
+    void append(const char *topic, uint8_t options);
 
-	const std::list<TopicOptions *> topics(void) const { return _topics; }
+    const std::list<TopicOptions *> topics(void) const
+    {
+        return _topics;
+    }
 
-	StatusCode packetId(uint16_t id) { return Packet::packetId(id); }
-	uint16_t packetId(void) const { return Packet::packetId(); }
+    StatusCode packetId(uint16_t id)
+    {
+        return Packet::packetId(id);
+    }
+    uint16_t packetId(void) const
+    {
+        return Packet::packetId();
+    }
 
-	enum StatusCode subscriptionIdentifier(uint32_t v);
-	uint32_t subscriptionIdentifier(void) const;
+    enum StatusCode subscriptionIdentifier(uint32_t v);
+    uint32_t subscriptionIdentifier(void) const;
 
-	uint32_t writeTo(AppBuf &buf) override;
-	uint32_t readFrom(AppBuf &buf) override;
+    uint32_t writeTo(AppBuf &buf) override;
+    uint32_t readFrom(AppBuf &buf) override;
 };
-
 }
 
 #endif
-

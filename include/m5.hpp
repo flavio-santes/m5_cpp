@@ -41,20 +41,19 @@
 #ifndef __M5_HPP__
 #define __M5_HPP__
 
-#include "PktConnect.hpp"
+#include "PktAuth.hpp"
 #include "PktConnAck.hpp"
-#include "PktPublish.hpp"
+#include "PktConnect.hpp"
+#include "PktDisconnect.hpp"
+#include "PktPing.hpp"
 #include "PktPubAck.hpp"
 #include "PktPubComp.hpp"
 #include "PktPubRec.hpp"
 #include "PktPubRel.hpp"
-#include "PktSubscribe.hpp"
+#include "PktPublish.hpp"
 #include "PktSubAck.hpp"
-#include "PktUnsubscribe.hpp"
+#include "PktSubscribe.hpp"
 #include "PktUnsubAck.hpp"
-#include "PktPing.hpp"
-#include "PktDisconnect.hpp"
-#include "PktAuth.hpp"
+#include "PktUnsubscribe.hpp"
 
 #endif
-

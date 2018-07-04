@@ -43,92 +43,110 @@
 
 #include "Common.hpp"
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
-namespace m5 {
+namespace m5
+{
 
-class AppBuf {
+class AppBuf
+{
 private:
-	ByteArray _data;
+    ByteArray _data;
 
-	std::size_t _offset = 0;
-	std::size_t _length = 0;
-	std::size_t _size = 0;
+    std::size_t _offset = 0;
+    std::size_t _length = 0;
+    std::size_t _size   = 0;
 
 public:
-	AppBuf(const uint8_t *data, std::size_t size);
-	AppBuf(std::size_t size = 0);
-	~AppBuf();
+    AppBuf(const uint8_t *data, std::size_t size);
+    AppBuf(std::size_t size = 0);
+    ~AppBuf();
 
-	const uint8_t *data() const { return _data.data(); }
-	uint8_t *ptrWrite(void) { return _data.data() + _length; }
-	uint8_t *ptrRead(void) { return _data.data() + _offset; }
+    const uint8_t *data() const
+    {
+        return _data.data();
+    }
+    uint8_t *ptrWrite(void)
+    {
+        return _data.data() + _length;
+    }
+    uint8_t *ptrRead(void)
+    {
+        return _data.data() + _offset;
+    }
 
-	std::size_t size(void) const { return _size; }
-	std::size_t length(void) const { return _length; }
-	std::size_t traversed(void) const { return _offset; }
-	void rewind();
-	void reset(void);
+    std::size_t size(void) const
+    {
+        return _size;
+    }
+    std::size_t length(void) const
+    {
+        return _length;
+    }
+    std::size_t traversed(void) const
+    {
+        return _offset;
+    }
+    void rewind();
+    void reset(void);
 
-	std::size_t bytesToRead(void) const;
+    std::size_t bytesToRead(void) const;
 
-	/* createFrom reads size bytes from src to create a new AppBuf */
-	static AppBuf *createFrom(AppBuf &src, std::size_t bytesToRead);
+    /* createFrom reads size bytes from src to create a new AppBuf */
+    static AppBuf *createFrom(AppBuf &src, std::size_t bytesToRead);
 
-	template <typename T> T readNum(void);
+    template <typename T> T readNum(void);
 
-	/* read does not do bound checking, use bytesToRead */
-	void read(ByteArray &dst, std::size_t size);
+    /* read does not do bound checking, use bytesToRead */
+    void read(ByteArray &dst, std::size_t size);
 
-	/* read does not do bound checking, use bytesToRead */
-	void read(uint8_t *d, std::size_t size);
+    /* read does not do bound checking, use bytesToRead */
+    void read(uint8_t *d, std::size_t size);
 
-	/* readNum8 does not do bound checking, use bytesToRead */
-	uint8_t readNum8(void);
+    /* readNum8 does not do bound checking, use bytesToRead */
+    uint8_t readNum8(void);
 
-	/* readNum16 does not do bound checking, use bytesToRead */
-	uint16_t readNum16(void);
+    /* readNum16 does not do bound checking, use bytesToRead */
+    uint16_t readNum16(void);
 
-	/* readNum32 does not do bound checking, use bytesToRead */
-	uint32_t readNum32(void);
+    /* readNum32 does not do bound checking, use bytesToRead */
+    uint32_t readNum32(void);
 
-	/* this routine does bound checking */
-	StatusCode readBinary(ByteArray &dst);
-	ByteArray *readBinary(void);
+    /* this routine does bound checking */
+    StatusCode readBinary(ByteArray &dst);
+    ByteArray *readBinary(void);
 
-	/* this routine does bound checking */
-	StatusCode readKeyValue(ByteArray &key, ByteArray &value);
+    /* this routine does bound checking */
+    StatusCode readKeyValue(ByteArray &key, ByteArray &value);
 
-	StatusCode readVBI(uint32_t &v, uint8_t &wireSize);
+    StatusCode readVBI(uint32_t &v, uint8_t &wireSize);
 
-	/* readSkip does not do bound checking, use bytesToRead */
-	void readSkip(std::size_t n, bool forward = true);
+    /* readSkip does not do bound checking, use bytesToRead */
+    void readSkip(std::size_t n, bool forward = true);
 
-	std::size_t bytesToWrite(void) const;
+    std::size_t bytesToWrite(void) const;
 
-	template <typename T> void writeNum(const T &v);
+    template <typename T> void writeNum(const T &v);
 
-	/* write does not do bound checking, use bytesToWrite */
-	void write(const uint8_t *d, std::size_t size);
+    /* write does not do bound checking, use bytesToWrite */
+    void write(const uint8_t *d, std::size_t size);
 
-	/* writeNum8 does not do bound checking, use bytesToWrite */
-	void writeNum8(uint32_t v);
+    /* writeNum8 does not do bound checking, use bytesToWrite */
+    void writeNum8(uint32_t v);
 
-	/* writeNum16 does not do bound checking, use bytesToWrite */
-	void writeNum16(uint32_t v);
+    /* writeNum16 does not do bound checking, use bytesToWrite */
+    void writeNum16(uint32_t v);
 
-	/* writeNum32 does not do bound checking, use bytesToWrite */
-	void writeNum32(uint32_t v);
+    /* writeNum32 does not do bound checking, use bytesToWrite */
+    void writeNum32(uint32_t v);
 
-	void writeBinary(const uint8_t *data, uint16_t size);
-	void writeBinary(const ByteArray &src);
-	void writeString(const char *str);
+    void writeBinary(const uint8_t *data, uint16_t size);
+    void writeBinary(const ByteArray &src);
+    void writeString(const char *str);
 
-	void writeVBI(uint32_t v);
+    void writeVBI(uint32_t v);
 };
-
 }
 
 #endif
-

@@ -40,7 +40,8 @@
 
 #include "PktRCodeProp.hpp"
 
-namespace m5 {
+namespace m5
+{
 
 PktRCodeProp::PktRCodeProp(enum PktType type) : Packet(type, 0x00)
 {
@@ -48,95 +49,94 @@ PktRCodeProp::PktRCodeProp(enum PktType type) : Packet(type, 0x00)
 
 PktRCodeProp::PktRCodeProp(enum PktType type, AppBuf &buf) : Packet(type, 0x00)
 {
-	this->readFrom(buf);
+    this->readFrom(buf);
 }
 
 void PktRCodeProp::reasonCode(enum ReasonCode rc)
 {
-	this->_reasonCode = (uint8_t)rc;
+    this->_reasonCode = (uint8_t)rc;
 }
-
 
 enum StatusCode PktRCodeProp::reasonString(const uint8_t *data, uint16_t size)
 {
-	return properties.reasonString(data, size);
+    return properties.reasonString(data, size);
 }
 
 enum StatusCode PktRCodeProp::reasonString(const char *str)
 {
-	return properties.reasonString(str);
+    return properties.reasonString(str);
 }
 
 const ByteArray &PktRCodeProp::reasonString(void) const
 {
-	return properties.reasonString();
+    return properties.reasonString();
 }
 
 enum StatusCode PktRCodeProp::userProperty(const uint8_t *key, uint16_t keySize,
-					   const uint8_t *value, uint16_t valueSize)
+                                           const uint8_t *value,
+                                           uint16_t valueSize)
 {
-	return properties.userProperty(key, keySize, value, valueSize);
+    return properties.userProperty(key, keySize, value, valueSize);
 }
 
 enum StatusCode PktRCodeProp::userProperty(const char *key, const char *val)
 {
-	return properties.userProperty(key, val);
+    return properties.userProperty(key, val);
 }
 
 const UserProperty &PktRCodeProp::userProperty(void) const
 {
-	return properties.userProperty();
+    return properties.userProperty();
 }
 
 enum StatusCode PktRCodeProp::writeVariableHeader(AppBuf &buf)
 {
-	buf.writeNum8(this->_reasonCode);
+    buf.writeNum8(this->_reasonCode);
 
-	return properties.write(buf);
+    return properties.write(buf);
 }
 
 enum StatusCode PktRCodeProp::writePayload(AppBuf &buf)
 {
-	(void)buf;
+    (void)buf;
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktRCodeProp::writeTo(AppBuf &buf)
 {
-	Packet::variableHeaderSize = 1;
-	Packet::hasProperties = true;
+    Packet::variableHeaderSize = 1;
+    Packet::hasProperties      = true;
 
-	return Packet::writeTo(buf);
+    return Packet::writeTo(buf);
 }
 
 enum StatusCode PktRCodeProp::readVariableHeader(AppBuf &buf)
 {
-	if (remainingLength > 0) {
-		reasonCode((enum ReasonCode)buf.readNum8());
-		if (remainingLength > 1) {
-			return properties.read(buf);
-		}
-	} else {
-		reasonCode((enum ReasonCode)0x00);
-	}
+    if (remainingLength > 0) {
+        reasonCode((enum ReasonCode)buf.readNum8());
+        if (remainingLength > 1) {
+            return properties.read(buf);
+        }
+    }
+    else {
+        reasonCode((enum ReasonCode)0x00);
+    }
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 enum StatusCode PktRCodeProp::readPayload(AppBuf &buf)
 {
-	(void)buf;
+    (void)buf;
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktRCodeProp::readFrom(AppBuf &buf)
 {
-	Packet::minRemLen = 0;
+    Packet::minRemLen = 0;
 
-	return Packet::readFrom(buf);
+    return Packet::readFrom(buf);
 }
-
 }
-

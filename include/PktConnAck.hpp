@@ -41,90 +41,93 @@
 #ifndef __PKT_CONNACK_HPP__
 #define __PKT_CONNACK_HPP__
 
-#include "Properties.hpp"
-#include "Packet.hpp"
 #include "AppBuf.hpp"
 #include "Common.hpp"
+#include "Packet.hpp"
+#include "Properties.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktConnAck : public Packet {
+class PktConnAck : public Packet
+{
 private:
-	bool _sessionPresent = false;
-	uint8_t _reasonCode = (uint8_t)ReasonCode::SUCCESS;
+    bool _sessionPresent = false;
+    uint8_t _reasonCode  = (uint8_t)ReasonCode::SUCCESS;
 
-	enum StatusCode writeVariableHeader(AppBuf &buf) override;
-	enum StatusCode writePayload(AppBuf &buf) override;
+    enum StatusCode writeVariableHeader(AppBuf &buf) override;
+    enum StatusCode writePayload(AppBuf &buf) override;
 
-	enum StatusCode readVariableHeader(AppBuf &buf) override;
-	enum StatusCode readPayload(AppBuf &buf) override;
+    enum StatusCode readVariableHeader(AppBuf &buf) override;
+    enum StatusCode readPayload(AppBuf &buf) override;
 
 public:
-	PktConnAck(bool sessionPresent = false,
-		   ReasonCode reasonCode = ReasonCode::SUCCESS);
-	PktConnAck(AppBuf &buf);
-	~PktConnAck() {}
+    PktConnAck(bool sessionPresent   = false,
+               ReasonCode reasonCode = ReasonCode::SUCCESS);
+    PktConnAck(AppBuf &buf);
+    ~PktConnAck()
+    {
+    }
 
-	enum StatusCode assignedClientIdentifier(const uint8_t *data, uint16_t size);
-	enum StatusCode assignedClientIdentifier(const char *str);
-	const ByteArray &assignedClientIdentifier(void) const;
+    enum StatusCode assignedClientIdentifier(const uint8_t *data,
+                                             uint16_t size);
+    enum StatusCode assignedClientIdentifier(const char *str);
+    const ByteArray &assignedClientIdentifier(void) const;
 
-	enum StatusCode serverKeepAlive(uint16_t v);
-	uint16_t serverKeepAlive(void) const;
+    enum StatusCode serverKeepAlive(uint16_t v);
+    uint16_t serverKeepAlive(void) const;
 
-	enum StatusCode authenticationMethod(const uint8_t *data, uint16_t size);
-	enum StatusCode authenticationMethod(const char *str);
-	const ByteArray &authenticationMethod(void) const;
+    enum StatusCode authenticationMethod(const uint8_t *data, uint16_t size);
+    enum StatusCode authenticationMethod(const char *str);
+    const ByteArray &authenticationMethod(void) const;
 
-	enum StatusCode authenticationData(const uint8_t *data, uint16_t size);
-	const ByteArray &authenticationData(void) const;
+    enum StatusCode authenticationData(const uint8_t *data, uint16_t size);
+    const ByteArray &authenticationData(void) const;
 
-	enum StatusCode responseInformation(const uint8_t *data, uint16_t size);
-	enum StatusCode responseInformation(const char *str);
-	const ByteArray &responseInformation(void) const;
+    enum StatusCode responseInformation(const uint8_t *data, uint16_t size);
+    enum StatusCode responseInformation(const char *str);
+    const ByteArray &responseInformation(void) const;
 
-	enum StatusCode serverReference(const uint8_t *data, uint16_t size);
-	enum StatusCode serverReference(const char *str);
-	const ByteArray &serverReference(void) const;
+    enum StatusCode serverReference(const uint8_t *data, uint16_t size);
+    enum StatusCode serverReference(const char *str);
+    const ByteArray &serverReference(void) const;
 
-	enum StatusCode reasonString(const uint8_t *data, uint16_t size);
-	enum StatusCode reasonString(const char *str);
-	const ByteArray &reasonString(void) const;
+    enum StatusCode reasonString(const uint8_t *data, uint16_t size);
+    enum StatusCode reasonString(const char *str);
+    const ByteArray &reasonString(void) const;
 
-	enum StatusCode receiveMaximum(uint16_t v);
-	uint16_t receiveMaximum(void) const;
+    enum StatusCode receiveMaximum(uint16_t v);
+    uint16_t receiveMaximum(void) const;
 
-	enum StatusCode topicAliasMaximum(uint16_t v);
-	uint16_t topicAliasMaximum(void) const;
+    enum StatusCode topicAliasMaximum(uint16_t v);
+    uint16_t topicAliasMaximum(void) const;
 
-	enum StatusCode maximumQoS(enum PktQoS qos);
-	enum PktQoS maximumQoS(void) const;
+    enum StatusCode maximumQoS(enum PktQoS qos);
+    enum PktQoS maximumQoS(void) const;
 
-	enum StatusCode retainAvailable(bool v);
-	bool retainAvailable(void) const;
+    enum StatusCode retainAvailable(bool v);
+    bool retainAvailable(void) const;
 
-	enum StatusCode userProperty(const uint8_t *key, uint16_t keySize,
-				     const uint8_t *value, uint16_t valueSize);
-	enum StatusCode userProperty(const char *key, const char *val);
-	const UserProperty &userProperty(void) const;
+    enum StatusCode userProperty(const uint8_t *key, uint16_t keySize,
+                                 const uint8_t *value, uint16_t valueSize);
+    enum StatusCode userProperty(const char *key, const char *val);
+    const UserProperty &userProperty(void) const;
 
-	enum StatusCode maximumPacketSize(uint32_t v);
-	uint32_t maximumPacketSize(void) const;
+    enum StatusCode maximumPacketSize(uint32_t v);
+    uint32_t maximumPacketSize(void) const;
 
-	enum StatusCode wildcardSubscriptionAvailable(bool v);
-	bool wildcardSubscriptionAvailable(void) const;
+    enum StatusCode wildcardSubscriptionAvailable(bool v);
+    bool wildcardSubscriptionAvailable(void) const;
 
-	enum StatusCode subscriptionIdentifierAvailable(bool v);
-	bool subscriptionIdentifierAvailable(void) const;
+    enum StatusCode subscriptionIdentifierAvailable(bool v);
+    bool subscriptionIdentifierAvailable(void) const;
 
-	enum StatusCode sharedSubscriptionAvailable(bool v);
-	bool sharedSubscriptionAvailable(void) const;
+    enum StatusCode sharedSubscriptionAvailable(bool v);
+    bool sharedSubscriptionAvailable(void) const;
 
-	uint32_t writeTo(AppBuf &buf) override;
-	uint32_t readFrom(AppBuf &buf) override;
+    uint32_t writeTo(AppBuf &buf) override;
+    uint32_t readFrom(AppBuf &buf) override;
 };
-
 }
 
 #endif
-

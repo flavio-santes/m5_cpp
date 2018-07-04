@@ -38,35 +38,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test_Common.hpp"
 #include "PktPing.hpp"
+#include "test_Common.hpp"
 
 template <typename T> int test(void)
 {
-	m5::AppBuf buf(2);
-	T pingRead;
-	T ping;
+    m5::AppBuf buf(2);
+    T pingRead;
+    T ping;
 
-	ping.writeTo(buf);
-	if (ping.status() != m5::StatusCode::SUCCESS) {
-		error_exit("write");
-	}
+    ping.writeTo(buf);
+    if (ping.status() != m5::StatusCode::SUCCESS) {
+        error_exit("write");
+    }
 
-	pingRead.readFrom(buf);
+    pingRead.readFrom(buf);
 
-	return 0;
+    return 0;
 }
 
 int main(void)
 {
-	int rc;
+    int rc;
 
-	rc = test<m5::PktPingReq>();
-	test_rc(rc, "PktPingReq");
+    rc = test<m5::PktPingReq>();
+    test_rc(rc, "PktPingReq");
 
-	rc = test<m5::PktPingResp>();
-	test_rc(rc, "PktPingResp");
+    rc = test<m5::PktPingResp>();
+    test_rc(rc, "PktPingResp");
 
-	return 0;
+    return 0;
 }
-

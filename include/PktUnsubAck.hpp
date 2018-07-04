@@ -41,18 +41,24 @@
 #ifndef __PKT_UNSUBACK_HPP__
 #define __PKT_UNSUBACK_HPP__
 
-#include"PktSubAckMsg.hpp"
+#include "PktSubAckMsg.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktUnsubAck : public PktSubAckMsg {
+class PktUnsubAck : public PktSubAckMsg
+{
 public:
-	PktUnsubAck() : PktSubAckMsg(PktType::UNSUBACK) {}
-	PktUnsubAck(AppBuf &buf) : PktSubAckMsg(PktType::UNSUBACK, buf) {}
-	~PktUnsubAck() {}
+    PktUnsubAck() : PktSubAckMsg(PktType::UNSUBACK)
+    {
+    }
+    PktUnsubAck(AppBuf &buf) : PktSubAckMsg(PktType::UNSUBACK, buf)
+    {
+    }
+    ~PktUnsubAck()
+    {
+    }
 };
-
 }
 
 #endif
-

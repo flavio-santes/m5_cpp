@@ -41,68 +41,68 @@
 #include "PktSubscribe.hpp"
 #include "test_Common.hpp"
 
-bool cmp(const std::list<m5::TopicOptions *> &a, const std::list<m5::TopicOptions *> &b)
+bool cmp(const std::list<m5::TopicOptions *> &a,
+         const std::list<m5::TopicOptions *> &b)
 {
-	if (a.size() != b.size()) {
-		return false;
-	}
+    if (a.size() != b.size()) {
+        return false;
+    }
 
-	auto a_it = a.begin();
-	auto b_it = b.begin();
+    auto a_it = a.begin();
+    auto b_it = b.begin();
 
-	do {
-		const m5::TopicOptions *a_topic = *a_it;
-		const m5::TopicOptions *b_topic = *b_it;
+    do {
+        const m5::TopicOptions *a_topic = *a_it;
+        const m5::TopicOptions *b_topic = *b_it;
 
-		if (a_topic->topic != b_topic->topic || a_topic->options != b_topic->options) {
-			return false;
-		}
+        if (a_topic->topic != b_topic->topic ||
+            a_topic->options != b_topic->options) {
+            return false;
+        }
 
-		a_it++;
-		b_it++;
-	} while (a_it != a.end() && b_it != b.end());
+        a_it++;
+        b_it++;
+    } while (a_it != a.end() && b_it != b.end());
 
-	return true;
+    return true;
 }
 
 int test(void)
 {
-	const char *msg = "Hello, World!";
-	m5::PktSubscribe *subs;
-	m5::AppBuf buf(256);
+    const char *msg = "Hello, World!";
+    m5::PktSubscribe *subs;
+    m5::AppBuf buf(256);
 
-	subs = new m5::PktSubscribe();
-	subs->append(msg, 0x01);
-	subs->append(msg, 0x02);
-	subs->append(msg, 0x03);
-	subs->packetId(0xABCD);
-	subs->writeTo(buf);
-	if (subs->status() != m5::StatusCode::SUCCESS) {
-		error_exit("write");
-	}
+    subs = new m5::PktSubscribe();
+    subs->append(msg, 0x01);
+    subs->append(msg, 0x02);
+    subs->append(msg, 0x03);
+    subs->packetId(0xABCD);
+    subs->writeTo(buf);
+    if (subs->status() != m5::StatusCode::SUCCESS) {
+        error_exit("write");
+    }
 
-	m5::PktSubscribe subsRead(buf);
-	if (subsRead.status() != m5::StatusCode::SUCCESS) {
-		error_exit("readFrom");
-	}
+    m5::PktSubscribe subsRead(buf);
+    if (subsRead.status() != m5::StatusCode::SUCCESS) {
+        error_exit("readFrom");
+    }
 
-	if (cmp(subs->topics(), subsRead.topics()) == false) {
-		error_exit("read/write: Subscribe");
-	}
+    if (cmp(subs->topics(), subsRead.topics()) == false) {
+        error_exit("read/write: Subscribe");
+    }
 
-	delete subs;
+    delete subs;
 
-	return 0;
+    return 0;
 }
-
 
 int main(void)
 {
-	int rc;
+    int rc;
 
-	rc = test();
-	test_rc(rc, "PktSubscribe");
+    rc = test();
+    test_rc(rc, "PktSubscribe");
 
-	return 0;
+    return 0;
 }
-

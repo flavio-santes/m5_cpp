@@ -42,17 +42,16 @@
 
 #include <cstring>
 
-namespace m5 {
+namespace m5
+{
 
-TopicOptions::TopicOptions(const uint8_t *topic, uint16_t size, uint8_t options) :
-			   topic(topic, topic + size),
-			   options(options)
+TopicOptions::TopicOptions(const uint8_t *topic, uint16_t size, uint8_t options)
+    : topic(topic, topic + size), options(options)
 {
 }
 
-TopicOptions::TopicOptions(const char *topic, uint8_t options) :
-			   topic(topic, topic + strlen(topic)),
-			   options(options)
+TopicOptions::TopicOptions(const char *topic, uint8_t options)
+    : topic(topic, topic + strlen(topic)), options(options)
 {
 }
 
@@ -62,117 +61,114 @@ PktSubscribe::PktSubscribe() : Packet(PktType::SUBSCRIBE, 0x02)
 
 PktSubscribe::PktSubscribe(AppBuf &buf) : Packet(PktType::SUBSCRIBE, 0x02)
 {
-	this->readFrom(buf);
+    this->readFrom(buf);
 }
 
 PktSubscribe::~PktSubscribe()
 {
-	auto it = _topics.begin();
+    auto it = _topics.begin();
 
-	while (it != _topics.end()) {
-		delete (*it);
+    while (it != _topics.end()) {
+        delete (*it);
 
-		it++;
-	}
+        it++;
+    }
 }
 
 void PktSubscribe::append(const uint8_t *topic, uint16_t size, uint8_t options)
 {
-	TopicOptions *item;
+    TopicOptions *item;
 
-	item = new TopicOptions(topic, size, options);
-	Packet::payloadSize += stringLenSize + item->topic.size() + 1;
+    item = new TopicOptions(topic, size, options);
+    Packet::payloadSize += stringLenSize + item->topic.size() + 1;
 
-	this->_topics.push_back(item);
+    this->_topics.push_back(item);
 }
 
 void PktSubscribe::append(const char *topic, uint8_t options)
 {
-	append((const uint8_t *)topic, strlen(topic), options);
+    append((const uint8_t *)topic, strlen(topic), options);
 }
 
 enum StatusCode PktSubscribe::subscriptionIdentifier(uint32_t v)
 {
-	return properties.subscriptionIdentifier(v);
+    return properties.subscriptionIdentifier(v);
 }
 
 uint32_t PktSubscribe::subscriptionIdentifier(void) const
 {
-	return properties.subscriptionIdentifier();
+    return properties.subscriptionIdentifier();
 }
 
 enum StatusCode PktSubscribe::writeVariableHeader(AppBuf &buf)
 {
-	buf.writeNum16(packetId());
+    buf.writeNum16(packetId());
 
-	return properties.write(buf);
+    return properties.write(buf);
 }
 
 enum StatusCode PktSubscribe::writePayload(AppBuf &buf)
 {
-	auto it = _topics.begin();
+    auto it = _topics.begin();
 
-	while (it != _topics.end()) {
-		auto item = *it;
+    while (it != _topics.end()) {
+        auto item = *it;
 
-		buf.writeBinary(item->topic);
-		buf.writeNum8(item->options);
+        buf.writeBinary(item->topic);
+        buf.writeNum8(item->options);
 
-		it++;
-	}
+        it++;
+    }
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktSubscribe::writeTo(AppBuf &buf)
 {
-	Packet::variableHeaderSize = 2;
-	Packet::hasProperties = true;
+    Packet::variableHeaderSize = 2;
+    Packet::hasProperties      = true;
 
-	return Packet::writeTo(buf);
+    return Packet::writeTo(buf);
 }
 
 enum StatusCode PktSubscribe::readVariableHeader(AppBuf &buf)
 {
-	auto rc = this->packetId(buf.readNum16());
-	if (rc != StatusCode::SUCCESS) {
-		return rc;
-	}
+    auto rc = this->packetId(buf.readNum16());
+    if (rc != StatusCode::SUCCESS) {
+        return rc;
+    }
 
-	return properties.read(buf);
+    return properties.read(buf);
 }
 
 enum StatusCode PktSubscribe::readPayload(AppBuf &buf)
 {
-	do {
-		if (buf.bytesToRead() < 2) {
-			return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
-		}
+    do {
+        if (buf.bytesToRead() < 2) {
+            return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
+        }
 
-		auto len = buf.readNum16();
+        auto len = buf.readNum16();
 
-		if (buf.bytesToRead() < (uint16_t)(len + 1)) {
-			return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
-		}
+        if (buf.bytesToRead() < (uint16_t)(len + 1)) {
+            return StatusCode::NOT_ENOUGH_SPACE_IN_BUFFER;
+        }
 
-		auto ptr = buf.ptrRead();
-		buf.readSkip(len);
-		auto options = buf.readNum8();
+        auto ptr = buf.ptrRead();
+        buf.readSkip(len);
+        auto options = buf.readNum8();
 
-		this->append(ptr, len, options);
-	} while (buf.bytesToRead() > 1);
+        this->append(ptr, len, options);
+    } while (buf.bytesToRead() > 1);
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktSubscribe::readFrom(AppBuf &buf)
 {
-	Packet::minRemLen = packetIdSize + propertyMinSize +
-			    stringLenSize + topicNameMinSize +
-			    subscribeOptionsSize;
+    Packet::minRemLen = packetIdSize + propertyMinSize + stringLenSize +
+                        topicNameMinSize + subscribeOptionsSize;
 
-	return Packet::readFrom(buf);
+    return Packet::readFrom(buf);
 }
-
 }
-

@@ -41,36 +41,34 @@
 #ifndef __TEST_COMMON_HPP__
 #define __TEST_COMMON_HPP__
 
-#include <iostream>
-#include <iomanip>
 #include <cstdint>
+#include <iomanip>
+#include <iostream>
 
-#define error_exit(msg)						\
-	std::cout << __func__ << ": " << (msg) << " error"	\
-		  << std::endl;					\
-	return 1;
+#define error_exit(msg)                                                        \
+    std::cout << __func__ << ": " << (msg) << " error" << std::endl;           \
+    return 1;
 
-#define test_rc(rc, msg)				\
-	std::cout << (((rc) != 0) ? "ERROR\t" : "OK\t")	\
-		  << (msg) << std::endl;		\
+#define test_rc(rc, msg)                                                       \
+    std::cout << (((rc) != 0) ? "ERROR\t" : "OK\t") << (msg) << std::endl;
 
-namespace m5 {
+namespace m5
+{
 
 static inline void printArray(const uint8_t *data, uint16_t length)
 {
-	for (uint16_t i = 0; i < length; i++) {
-		std::cout << std::hex << std::setfill('0') << std::setw(2)
-			  <<  (int)data[i];
-		if ((i + 1) % 8 != 0) {
-			std::cout << " ";
-		} else {
-			std::cout << "\n";
-		}
-	}
-	std::cout << "\n";
+    for (uint16_t i = 0; i < length; i++) {
+        std::cout << std::hex << std::setfill('0') << std::setw(2)
+                  << (int)data[i];
+        if ((i + 1) % 8 != 0) {
+            std::cout << " ";
+        }
+        else {
+            std::cout << "\n";
+        }
+    }
+    std::cout << "\n";
 }
-
 }
 
 #endif
-

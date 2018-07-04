@@ -41,46 +41,62 @@
 #ifndef __PKT_PING_HPP__
 #define __PKT_PING_HPP__
 
-#include "Packet.hpp"
 #include "AppBuf.hpp"
 #include "Common.hpp"
+#include "Packet.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktPing : public Packet {
+class PktPing : public Packet
+{
 private:
-	enum StatusCode writeVariableHeader(AppBuf &buf) override;
-	enum StatusCode writePayload(AppBuf &buf) override;
+    enum StatusCode writeVariableHeader(AppBuf &buf) override;
+    enum StatusCode writePayload(AppBuf &buf) override;
 
-	enum StatusCode readVariableHeader(AppBuf &buf) override;
-	enum StatusCode readPayload(AppBuf &buf) override;
+    enum StatusCode readVariableHeader(AppBuf &buf) override;
+    enum StatusCode readPayload(AppBuf &buf) override;
 
 protected:
-	PktPing(enum PktType type);
-	PktPing(enum PktType type, AppBuf &buf);
+    PktPing(enum PktType type);
+    PktPing(enum PktType type, AppBuf &buf);
 
 public:
-	virtual ~PktPing() {}
+    virtual ~PktPing()
+    {
+    }
 
-	uint32_t writeTo(AppBuf &buf) override;
-	uint32_t readFrom(AppBuf &buf) override;
+    uint32_t writeTo(AppBuf &buf) override;
+    uint32_t readFrom(AppBuf &buf) override;
 };
 
-class PktPingReq : public PktPing {
+class PktPingReq : public PktPing
+{
 public:
-	PktPingReq() : PktPing(PktType::PINGREQ) {}
-	PktPingReq(AppBuf &buf) : PktPing(PktType::PINGREQ, buf) {}
-	~PktPingReq() {}
+    PktPingReq() : PktPing(PktType::PINGREQ)
+    {
+    }
+    PktPingReq(AppBuf &buf) : PktPing(PktType::PINGREQ, buf)
+    {
+    }
+    ~PktPingReq()
+    {
+    }
 };
 
-class PktPingResp : public PktPing {
+class PktPingResp : public PktPing
+{
 public:
-	PktPingResp() : PktPing(PktType::PINGRESP) {}
-	PktPingResp(AppBuf &buf) : PktPing(PktType::PINGRESP, buf) {}
-	~PktPingResp() {}
+    PktPingResp() : PktPing(PktType::PINGRESP)
+    {
+    }
+    PktPingResp(AppBuf &buf) : PktPing(PktType::PINGRESP, buf)
+    {
+    }
+    ~PktPingResp()
+    {
+    }
 };
-
 }
 
 #endif
-

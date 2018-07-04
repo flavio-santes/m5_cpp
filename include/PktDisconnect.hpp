@@ -41,26 +41,32 @@
 #ifndef __PKT_PKTDISCONNECT_HPP__
 #define __PKT_PKTDISCONNECT_HPP__
 
-#include "PktRCodeProp.hpp"
 #include "Common.hpp"
+#include "PktRCodeProp.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktDisconnect : public PktRCodeProp {
+class PktDisconnect : public PktRCodeProp
+{
 public:
-	PktDisconnect() : PktRCodeProp(PktType::DISCONNECT) {}
-	PktDisconnect(AppBuf &buf) : PktRCodeProp(PktType::DISCONNECT, buf) {}
-	~PktDisconnect() {}
+    PktDisconnect() : PktRCodeProp(PktType::DISCONNECT)
+    {
+    }
+    PktDisconnect(AppBuf &buf) : PktRCodeProp(PktType::DISCONNECT, buf)
+    {
+    }
+    ~PktDisconnect()
+    {
+    }
 
-	enum StatusCode sessionExpiryInterval(uint32_t v);
-	uint32_t sessionExpiryInterval(void) const;
+    enum StatusCode sessionExpiryInterval(uint32_t v);
+    uint32_t sessionExpiryInterval(void) const;
 
-	enum StatusCode serverReference(const uint8_t *data, uint16_t size);
-	enum StatusCode serverReference(const char *str);
-	const ByteArray &serverReference(void) const;
+    enum StatusCode serverReference(const uint8_t *data, uint16_t size);
+    enum StatusCode serverReference(const char *str);
+    const ByteArray &serverReference(void) const;
 };
-
 }
 
 #endif
-

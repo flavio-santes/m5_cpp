@@ -38,61 +38,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test_Common.hpp"
 #include "PktPubAck.hpp"
+#include "PktPubComp.hpp"
 #include "PktPubRec.hpp"
 #include "PktPubRel.hpp"
-#include "PktPubComp.hpp"
+#include "test_Common.hpp"
 
 template <typename T> int test(void)
 {
-	uint16_t u16 = 0xABCD;
-	m5::AppBuf buf(16);
-	T *pub;
+    uint16_t u16 = 0xABCD;
+    m5::AppBuf buf(16);
+    T *pub;
 
-	pub = new T();
-	pub->packetId(u16);
-	pub->reasonCode(m5::ReasonCode::SERVER_BUSY);
+    pub = new T();
+    pub->packetId(u16);
+    pub->reasonCode(m5::ReasonCode::SERVER_BUSY);
 
-	pub->writeTo(buf);
-	if (pub->status() != m5::StatusCode::SUCCESS) {
-		error_exit("writeTo");
-	}
+    pub->writeTo(buf);
+    if (pub->status() != m5::StatusCode::SUCCESS) {
+        error_exit("writeTo");
+    }
 
-	T pubRead;
-	pubRead.readFrom(buf);
-	if (pubRead.status() != m5::StatusCode::SUCCESS) {
-		error_exit("readFrom");
-	}
+    T pubRead;
+    pubRead.readFrom(buf);
+    if (pubRead.status() != m5::StatusCode::SUCCESS) {
+        error_exit("readFrom");
+    }
 
-	if (pub->reasonCode() != pubRead.reasonCode()) {
-		error_exit("read: Reason Code");
-	}
-	if (pub->packetId() != pubRead.packetId()) {
-		error_exit("read: Packet Id");
-	}
+    if (pub->reasonCode() != pubRead.reasonCode()) {
+        error_exit("read: Reason Code");
+    }
+    if (pub->packetId() != pubRead.packetId()) {
+        error_exit("read: Packet Id");
+    }
 
-	delete pub;
+    delete pub;
 
-	return 0;
+    return 0;
 }
 
 int main(void)
 {
-	int rc;
+    int rc;
 
-	rc = test<m5::PktPubAck>();
-	test_rc(rc, "PktPubAck");
+    rc = test<m5::PktPubAck>();
+    test_rc(rc, "PktPubAck");
 
-	rc = test<m5::PktPubRec>();
-	test_rc(rc, "PktPubRec");
+    rc = test<m5::PktPubRec>();
+    test_rc(rc, "PktPubRec");
 
-	rc = test<m5::PktPubRel>();
-	test_rc(rc, "PktPubRel");
+    rc = test<m5::PktPubRel>();
+    test_rc(rc, "PktPubRel");
 
-	rc = test<m5::PktPubComp>();
-	test_rc(rc, "PktPubComp");
+    rc = test<m5::PktPubComp>();
+    test_rc(rc, "PktPubComp");
 
-	return 0;
+    return 0;
 }
-

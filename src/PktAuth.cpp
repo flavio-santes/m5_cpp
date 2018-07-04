@@ -40,32 +40,32 @@
 
 #include "PktAuth.hpp"
 
-namespace m5 {
-
-enum StatusCode PktAuth::authenticationMethod(const uint8_t *data, uint16_t size)
+namespace m5
 {
-	return properties.authenticationMethod(data, size);
+
+enum StatusCode PktAuth::authenticationMethod(const uint8_t *data,
+                                              uint16_t size)
+{
+    return properties.authenticationMethod(data, size);
 }
 
 enum StatusCode PktAuth::authenticationMethod(const char *str)
 {
-	return properties.authenticationMethod(str);
+    return properties.authenticationMethod(str);
 }
 
 const ByteArray &PktAuth::authenticationMethod(void) const
 {
-	return properties.authenticationMethod();
+    return properties.authenticationMethod();
 }
 
 enum StatusCode PktAuth::authenticationData(const uint8_t *data, uint16_t size)
 {
-	return properties.authenticationData(data, size);
+    return properties.authenticationData(data, size);
 }
 
 const ByteArray &PktAuth::authenticationData(void) const
 {
-	return properties.authenticationData();
+    return properties.authenticationData();
 }
-
 }
-

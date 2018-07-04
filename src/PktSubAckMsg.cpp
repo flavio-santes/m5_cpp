@@ -38,9 +38,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include"PktSubAckMsg.hpp"
+#include "PktSubAckMsg.hpp"
 
-namespace m5 {
+namespace m5
+{
 
 PktSubAckMsg::PktSubAckMsg(enum PktType type) : Packet(type, 0x00)
 {
@@ -48,90 +49,89 @@ PktSubAckMsg::PktSubAckMsg(enum PktType type) : Packet(type, 0x00)
 
 PktSubAckMsg::PktSubAckMsg(enum PktType type, AppBuf &buf) : Packet(type, 0x00)
 {
-	this->readFrom(buf);
+    this->readFrom(buf);
 }
 
 enum StatusCode PktSubAckMsg::reasonString(const uint8_t *data, uint16_t size)
 {
-	return properties.reasonString(data, size);
+    return properties.reasonString(data, size);
 }
 
 enum StatusCode PktSubAckMsg::reasonString(const char *str)
 {
-	return properties.reasonString(str);
+    return properties.reasonString(str);
 }
 
 const ByteArray &PktSubAckMsg::reasonString(void) const
 {
-	return properties.reasonString();
+    return properties.reasonString();
 }
 
 enum StatusCode PktSubAckMsg::userProperty(const uint8_t *key, uint16_t keySize,
-					   const uint8_t *value, uint16_t valueSize)
+                                           const uint8_t *value,
+                                           uint16_t valueSize)
 {
-	return properties.userProperty(key, keySize, value, valueSize);
+    return properties.userProperty(key, keySize, value, valueSize);
 }
 
 enum StatusCode PktSubAckMsg::userProperty(const char *key, const char *val)
 {
-	return properties.userProperty(key, val);
+    return properties.userProperty(key, val);
 }
 
 const UserProperty &PktSubAckMsg::userProperty(void) const
 {
-	return properties.userProperty();
+    return properties.userProperty();
 }
 
 enum StatusCode PktSubAckMsg::writeVariableHeader(AppBuf &buf)
 {
-	buf.writeNum16(this->packetId());
+    buf.writeNum16(this->packetId());
 
-	return properties.write(buf);
+    return properties.write(buf);
 }
 
 enum StatusCode PktSubAckMsg::writePayload(AppBuf &buf)
 {
-	for (auto it = _reasonCodes.begin(); it != _reasonCodes.end(); it++) {
-		buf.writeNum8(*it);
-	}
+    for (auto it = _reasonCodes.begin(); it != _reasonCodes.end(); it++) {
+        buf.writeNum8(*it);
+    }
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktSubAckMsg::writeTo(AppBuf &buf)
 {
-	Packet::payloadSize = _reasonCodes.size();
-	Packet::variableHeaderSize = 2;
-	Packet::hasProperties = true;
+    Packet::payloadSize        = _reasonCodes.size();
+    Packet::variableHeaderSize = 2;
+    Packet::hasProperties      = true;
 
-	return Packet::writeTo(buf);
+    return Packet::writeTo(buf);
 }
 
 enum StatusCode PktSubAckMsg::readVariableHeader(AppBuf &buf)
 {
-	this->packetId(buf.readNum16());
-	if (this->packetId() == 0) {
-		return StatusCode::INVALID_PACKET_ID;
-	}
+    this->packetId(buf.readNum16());
+    if (this->packetId() == 0) {
+        return StatusCode::INVALID_PACKET_ID;
+    }
 
-	return properties.read(buf);
+    return properties.read(buf);
 }
 
 enum StatusCode PktSubAckMsg::readPayload(AppBuf &buf)
 {
-	for (uint32_t i = 0; i < payloadSize; i++) {
-		this->append((enum ReasonCode)buf.readNum8());
-	}
+    for (uint32_t i = 0; i < payloadSize; i++) {
+        this->append((enum ReasonCode)buf.readNum8());
+    }
 
-	return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 uint32_t PktSubAckMsg::readFrom(AppBuf &buf)
 {
-	Packet::minRemLen = packetIdSize + propertyMinSize + reasonCodeSize;
+    Packet::minRemLen = packetIdSize + propertyMinSize + reasonCodeSize;
 
-	return Packet::readFrom(buf);
+    return Packet::readFrom(buf);
 }
-
 }
-

@@ -41,21 +41,26 @@
 #ifndef __PKT_PUBACK_HPP__
 #define __PKT_PUBACK_HPP__
 
+#include "Common.hpp"
 #include "PktPubMsg.hpp"
 #include "Properties.hpp"
-#include "Common.hpp"
 
-namespace m5 {
+namespace m5
+{
 
-class PktPubAck: public PktPubMsg
+class PktPubAck : public PktPubMsg
 {
 public:
-	PktPubAck() : PktPubMsg(PktType::PUBACK, 0x00) {}
-	PktPubAck(AppBuf &buf) : PktPubMsg(PktType::PUBACK, 0x00, buf) {}
-	~PktPubAck() {}
+    PktPubAck() : PktPubMsg(PktType::PUBACK, 0x00)
+    {
+    }
+    PktPubAck(AppBuf &buf) : PktPubMsg(PktType::PUBACK, 0x00, buf)
+    {
+    }
+    ~PktPubAck()
+    {
+    }
 };
-
 }
 
 #endif
-
