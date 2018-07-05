@@ -22,7 +22,7 @@
 #
 # MQTT 5 Low Level Packet Library
 #
-# Copyright (C) 2017 1byt3, customers at 1byt3.com
+# Copyright (C) 2017, 2018 1byt3, customers at 1byt3.com
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
