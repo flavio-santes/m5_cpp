@@ -63,6 +63,32 @@ INCS_DIR = include
 
 TESTS_DIR = tests
 
+VERSION = 0.0.1
+
+LIB = lib/libm5++_$(VERSION).a
+
+OBJS =				\
+	obj/AppBuf.o		\
+	obj/Packet.o		\
+	obj/PktAuth.o		\
+	obj/PktConnAck.o	\
+	obj/PktConnect.o	\
+	obj/PktDisconnect.o	\
+	obj/PktPing.o		\
+	obj/PktPubAck.o		\
+	obj/PktPubComp.o	\
+	obj/PktPublish.o	\
+	obj/PktPubMsg.o		\
+	obj/PktPubRec.o		\
+	obj/PktPubRel.o		\
+	obj/PktRCodeProp.o	\
+	obj/PktSubAck.o		\
+	obj/PktSubAckMsg.o	\
+	obj/PktSubscribe.o	\
+	obj/PktUnsubAck.o	\
+	obj/PktUnsubscribe.o	\
+	obj/Properties.o
+
 TESTS =					\
 	$(BINS_DIR)/test_AppBuf		\
 	$(BINS_DIR)/test_Properties	\
@@ -78,22 +104,16 @@ TESTS =					\
 
 VALGRIND = valgrind -q --leak-check=full --error-exitcode=1
 
-all: dirs $(TESTS)
+all: dirs $(LIB) $(TESTS)
 
 dirs:
 	@mkdir -p obj
 	@mkdir -p bin
+	@mkdir -p lib
 
-$(OBJS_DIR)/test_%.o:			\
-	$(TESTS_DIR)/test_%.cpp		\
-	$(SRCS_DIR)/%.cpp		\
-	$(INCS_DIR)/%.hpp		\
-	$(INCS_DIR)/AppBuf.hpp		\
-	$(INCS_DIR)/Packet.hpp		\
-	$(TESTS_DIR)/test_Common.hpp	\
-	$(INCS_DIR)/Properties.hpp	\
-	$(INCS_DIR)/Common.hpp
-	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) $(INC) -c -o $@ $<
+$(LIB): $(OBJS)
+	ar r $@ $^
+	ranlib $@
 
 $(OBJS_DIR)/%.o:			\
 	$(SRCS_DIR)/%.cpp		\
@@ -101,33 +121,15 @@ $(OBJS_DIR)/%.o:			\
 	$(INCS_DIR)/Common.hpp
 	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) $(INC) -c -o $@ $<
 
-$(BINS_DIR)/test_PktPubMsg:		\
-	$(OBJS_DIR)/test_PktPubMsg.o	\
-	$(OBJS_DIR)/PktPubMsg.o		\
-	$(OBJS_DIR)/PktPubAck.o		\
-	$(OBJS_DIR)/PktPubRec.o		\
-	$(OBJS_DIR)/Properties.o	\
-	$(OBJS_DIR)/AppBuf.o		\
-	$(OBJS_DIR)/Packet.o
-	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) -o $@ $^
-
-$(BINS_DIR)/test_PktRCodeProp:		\
-	$(OBJS_DIR)/test_PktRCodeProp.o	\
-	$(OBJS_DIR)/PktRCodeProp.o	\
-	$(OBJS_DIR)/PktAuth.o		\
-	$(OBJS_DIR)/PktDisconnect.o	\
-	$(OBJS_DIR)/Properties.o	\
-	$(OBJS_DIR)/AppBuf.o		\
-	$(OBJS_DIR)/Packet.o
-	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) -o $@ $^
+$(OBJS_DIR)/test_%.o:			\
+	$(TESTS_DIR)/test_%.cpp		\
+	$(TESTS_DIR)/test_Common.hpp
+	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) $(INC) -c -o $@ $<
 
 $(BINS_DIR)/test_%:			\
 	$(OBJS_DIR)/test_%.o		\
-	$(OBJS_DIR)/%.o			\
-	$(OBJS_DIR)/Properties.o	\
-	$(OBJS_DIR)/AppBuf.o		\
-	$(OBJS_DIR)/Packet.o
-	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS) -o $@ $^
+	$(LIB)
+	$(CXX) -o $@ $^
 
 tests: $(TESTS)
 	@$(foreach test, $(TESTS), ./$(test) || exit 1;)
@@ -136,6 +138,6 @@ memtest: $(TESTS)
 	@$(foreach test, $(TESTS), $(VALGRIND) ./$(test) || exit 1;)
 
 clean:
-	rm -rf obj bin
+	rm -rf obj bin lib
 
 .PHONY: all dirs tests memtest clean
