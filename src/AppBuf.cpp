@@ -41,7 +41,12 @@
 #include "AppBuf.hpp"
 
 #include <cstring>
+
+#if defined(__FreeBSD__)
+#include <sys/endian.h>
+#else
 #include <endian.h>
+#endif
 
 namespace m5
 {
